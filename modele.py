@@ -18,7 +18,8 @@ class Mine:
         self.x = x
         self.y = y
         self.vitesse = 4   # vers le bas
-        self.taille = 5     # est un carré donc meme taille pour les deux côté
+        self.taille_x = 5     # est un carré donc meme taille pour les deux côté
+        self.taille_y = 5
 
     def mise_a_jour(self):
         self.y += self.vitesse
@@ -157,17 +158,21 @@ class Modele:
             alea_tir = random.random()
             if alea_tir < 0.01:
                 o.tirer()
+            for m in o.mines:
+                if (self.collisionAvec(self.vaisseau, m)):
+                    self.vaisseau.vie -= 1
+                    o.mines.remove(m)
 
         # Déplacement des ennemis
-        for o in self.ovnis:
+        for o in self.vague.liste_ovnis:
             o.mise_a_jour()
             if(self.collisionAvec(self.vaisseau, o)):
                 self.vaisseau.vie -= 1 
-                self.ovnis.remove(o)
+                self.vague.liste_ovnis.remove(o)
             for p in self.vaisseau.projectiles:
                 if (self.collisionAvec(o, p)):
                     print("ovni détruit")
-                    self.ovnis.remove(o)
+                    self.vague.liste_ovnis.remove(o)
                     self.vaisseau.projectiles.remove(p)
 
         for a in self.asteroides:

@@ -118,9 +118,9 @@ class Vue:
         for o in modele.vague.liste_ovnis:
             for m in o.mines:
                 self.canevas.create_rectangle(
-                    m.x + m.taille,
-                    m.y + m.taille,
-                    m.x - m.taille,
+                    m.x + m.taille_x,
+                    m.y + m.taille_x,
+                    m.x - m.taille_x,
                     m.y,
                     fill="red"
                 )    
