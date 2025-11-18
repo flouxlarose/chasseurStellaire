@@ -33,6 +33,7 @@ class Vaisseau:
         for p in self.projectiles:
             p.mise_a_jour()
 
+        # Détruit les projectiles qui sortent du canvas
         self.projectiles = [
             p for p in self.projectiles
             if p.y > 0
@@ -80,6 +81,16 @@ class Modele:
         self.vaisseau.deplacer(x)
     def tirer(self):
         self.vaisseau.tirer()
+    def collisionAvec(self, objet):
+        if ( not(
+                self.vaisseau.x + self.vaisseau.taille_x < objet.x or
+                self.vaisseau.x > objet.x + objet.taille_x or
+                self.vaisseau.y + self.vaisseau.taille_y < objet.y or
+                self.vaisseau.y > objet.y + objet.taille_y )):
+                print("hit par ovni")
+                self.vaisseau.vie -= 1
+                return True
+        
     def mise_a_jour(self):
         self.vaisseau.mise_a_jour()
 
@@ -105,24 +116,12 @@ class Modele:
         # Déplacement des ennemis
         for o in self.ovnis:
             o.mise_a_jour()
-            if ( not(
-                self.vaisseau.x + self.vaisseau.taille_x < o.x or
-                self.vaisseau.x > o.x + o.taille_x or
-                self.vaisseau.y + self.vaisseau.taille_y < o.y or
-                self.vaisseau.y > o.y + o.taille_y )):
-                print("hit par ovni")
-                self.vaisseau.vie -= 1
+            if(self.collisionAvec(o)):
                 self.ovnis.remove(o)
 
         for a in self.asteroides:
             a.mise_a_jour()
-            if ( not(
-                self.vaisseau.x + self.vaisseau.taille_x < a.x or
-                self.vaisseau.x > a.x + a.taille_x or
-                self.vaisseau.y + self.vaisseau.taille_y < a.y or
-                self.vaisseau.y > a.y + a.taille_y )):
-                print("hit par astéroide")
-                self.vaisseau.vie -= 1
+            if(self.collisionAvec(a)):
                 self.asteroides.remove(a)
 
         # Nettoyage des objets sortis de l'écran
