@@ -79,16 +79,17 @@ class Modele:
 
     def deplacer_vaisseau(self,x):
         self.vaisseau.deplacer(x)
+
     def tirer(self):
         self.vaisseau.tirer()
-    def collisionAvec(self, objet):
+
+    def collisionAvec(self, objetA, objetB):
         if ( not(
-                self.vaisseau.x + self.vaisseau.taille_x < objet.x or
-                self.vaisseau.x > objet.x + objet.taille_x or
-                self.vaisseau.y + self.vaisseau.taille_y < objet.y or
-                self.vaisseau.y > objet.y + objet.taille_y )):
-                print("hit par ovni")
-                self.vaisseau.vie -= 1
+                objetA.x + objetA.taille_x < objetB.x or
+                objetA.x > objetB.x + objetB.taille_x or
+                objetA.y + self.vaisseau.taille_y < objetB.y or
+                objetA.y > objetB.y + objetB.taille_y )):
+                # print(f"{objetA} + hit par + {objetB}")
                 return True
         
     def mise_a_jour(self):
@@ -116,13 +117,26 @@ class Modele:
         # Déplacement des ennemis
         for o in self.ovnis:
             o.mise_a_jour()
-            if(self.collisionAvec(o)):
+            if(self.collisionAvec(self.vaisseau, o)):
+                self.vaisseau.vie -= 1 
                 self.ovnis.remove(o)
+            for p in self.vaisseau.projectiles:
+                if (self.collisionAvec(o, p)):
+                    print("ovni détruit")
+                    self.ovnis.remove(o)
+                    self.vaisseau.projectiles.remove(p)
 
         for a in self.asteroides:
             a.mise_a_jour()
-            if(self.collisionAvec(a)):
+            if(self.collisionAvec(self.vaisseau, a)):
+                self.vaisseau.vie -= 1
                 self.asteroides.remove(a)
+            for p in self.vaisseau.projectiles:
+                if (self.collisionAvec(a, p)):
+                    print("astéroide détruit")
+                    self.asteroides.remove(a)
+                    self.vaisseau.projectiles.remove(p)
+
 
         # Nettoyage des objets sortis de l'écran
         self.ovnis = [
