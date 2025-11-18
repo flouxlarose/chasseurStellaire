@@ -9,9 +9,12 @@ class Controleur:
         self.vue.root.mainloop()
 
     def boucle_jeu(self):
-        self.modele.mise_a_jour()
-        self.vue.afficher_jeu()
-        self.vue.root.after(30, self.boucle_jeu)
+        if (self.modele.vaisseau.vie > 0):
+            self.modele.mise_a_jour()
+            self.vue.afficher_jeu()
+            self.vue.root.after(30, self.boucle_jeu)
+        else:
+            self.vue.afficher_game_over()
 
     # Méthodes appelées par la Vue (via bindings)
     def deplacer_vaisseau(self, x):

@@ -110,6 +110,13 @@ class Vue:
         self.label_vie.config(text=f"Vies : {v.vie}")
         self.label_niveau.config(text=f"Niveau : {modele.niveau}")
 
+    def afficher_game_over(self):
+        self.canevas.create_rectangle(
+            50,50,
+            500,500,
+            fill="white"
+        )
+
     def deplacer_vaisseau(self,evt):
         # on pourrait vouloir le déplacer en y aussi
         self.controleur.deplacer_vaisseau(evt.x)
