@@ -79,22 +79,51 @@ class Vue:
             )
 
         # --- OVNIs ---
-        for o in modele.ovnis:
+        # for o in modele.ovnis:
+        #     self.canevas.create_rectangle(
+        #         o.x - o.taille_x,
+        #         o.y - o.taille_y,
+        #         o.x + o.taille_x,
+        #         o.y + o.taille_y,
+        #         fill="red"
+        #     )
+        #     self.canevas.create_line(
+        #         o.x,
+        #         o.y + o.taille_y,
+        #         o.x,
+        #         o.y + o.taille_y + 6,
+        #         fill="orange",
+        #         width=2
+        #     )
+
+        # --- Vague ---
+        for o in modele.vague.liste_ovnis:
             self.canevas.create_rectangle(
                 o.x - o.taille_x,
                 o.y - o.taille_y,
                 o.x + o.taille_x,
                 o.y + o.taille_y,
-                fill="red"
+                fill="yellow"
             )
             self.canevas.create_line(
                 o.x,
                 o.y + o.taille_y,
                 o.x,
                 o.y + o.taille_y + 6,
-                fill="orange",
+                fill="red",
                 width=2
             )
+
+        # --- Mines ---
+        for o in modele.vague.liste_ovnis:
+            for m in o.mines:
+                self.canevas.create_rectangle(
+                    m.x + m.taille,
+                    m.y + m.taille,
+                    m.x - m.taille,
+                    m.y,
+                    fill="red"
+                )    
 
         # --- Astéroïdes ---
         for a in modele.asteroides:

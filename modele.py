@@ -13,6 +13,16 @@ class Projectile:
     def mise_a_jour(self):
         self.y += self.vitesse
 
+class Mine:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+        self.vitesse = 4   # vers le bas
+        self.taille = 5     # est un carré donc meme taille pour les deux côté
+
+    def mise_a_jour(self):
+        self.y += self.vitesse
+
 
 class Vaisseau:
     def __init__(self, x, y):
@@ -47,9 +57,34 @@ class OVNI:
         self.vy = vy
         self.taille_x = 12
         self.taille_y = 6
+        self.mines = []
+
+    def tirer(self):
+        nouvelle_mine = Mine(self.x, self.y + 10)
+        self.mines.append(nouvelle_mine)
 
     def mise_a_jour(self):
         self.y += self.vy
+
+        for m in self.mines:
+            m.mise_a_jour()
+
+        self.mines = [
+            m for m in self.mines
+            if m.y > 0
+        ]
+
+
+class Vague:
+    def __init__(self):
+        self.liste_ovnis = []
+        for i in range(10):
+            newOvni = OVNI(random.randint(0, 600), 0, random.randint(1,2 ))
+            self.liste_ovnis.append(newOvni)
+
+    def mise_a_jour(self):
+        for i in self.liste_ovnis:
+            i.mise_a_jour()
 
 
 class Asteroide:
@@ -77,6 +112,8 @@ class Modele:
         self.score = 0
         self.niveau = 1
 
+        self.vague = Vague()
+
     def deplacer_vaisseau(self,x):
         self.vaisseau.deplacer(x)
 
@@ -94,6 +131,7 @@ class Modele:
         
     def mise_a_jour(self):
         self.vaisseau.mise_a_jour()
+        self.vague.mise_a_jour()
 
         # Apparition aléatoire des ennemis
         alea_ovni = random.random()
@@ -113,6 +151,12 @@ class Modele:
                 random.randint(3, 6)
             )
             self.asteroides.append(nouvel_ast)
+
+        # Tir aléatoire des ovnis
+        for o in self.vague.liste_ovnis:
+            alea_tir = random.random()
+            if alea_tir < 0.01:
+                o.tirer()
 
         # Déplacement des ennemis
         for o in self.ovnis:
