@@ -105,9 +105,25 @@ class Modele:
         # Déplacement des ennemis
         for o in self.ovnis:
             o.mise_a_jour()
+            if ( not(
+                self.vaisseau.x + self.vaisseau.taille_x < o.x or
+                self.vaisseau.x > o.x + o.taille_x or
+                self.vaisseau.y + self.vaisseau.taille_y < o.y or
+                self.vaisseau.y > o.y + o.taille_y )):
+                print("hit par ovni")
+                self.vaisseau.vie -= 1
+                self.ovnis.remove(o)
 
         for a in self.asteroides:
             a.mise_a_jour()
+            if ( not(
+                self.vaisseau.x + self.vaisseau.taille_x < a.x or
+                self.vaisseau.x > a.x + a.taille_x or
+                self.vaisseau.y + self.vaisseau.taille_y < a.y or
+                self.vaisseau.y > a.y + a.taille_y )):
+                print("hit par astéroide")
+                self.vaisseau.vie -= 1
+                self.asteroides.remove(a)
 
         # Nettoyage des objets sortis de l'écran
         self.ovnis = [
