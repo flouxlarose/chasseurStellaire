@@ -1,5 +1,6 @@
 import tkinter as tk
 from random import randint
+import math
 
 class Vue:
     def __init__(self, controleur, hauteur, largeur):
@@ -146,23 +147,35 @@ class Vue:
                 a.y + a.taille_y,
                 fill="gray"
             )
+        
+        # --- Power ups ---
+        for p in self.controleur.modele.powerUps:
+            self.create_power_up(
+                p.x,
+                p.y,
+                p.inner,
+                p.outer,
+                p.type
+            )
 
         # --- Infos ---
         self.label_vie.config(text=f"Vies : {v.vie}")
         self.label_niveau.config(text=f"Niveau : {self.controleur.modele.niveau}")
         self.label_score.config(text=f"Score : {self.controleur.modele.score}")
     
-    def create_power_up(self, fill):
+    def create_power_up(self, x, y, inner, outer, fill):
         points = []
         for i in range(10):
             angle = i * 36
             if (i % 2):
-                rayon = 10
+                rayon = inner
             else:
-                rayon = 15
-        x = randint(5, self.largeur-5)
-        
-            
+                rayon = outer
+            point_X = x + rayon * (math.cos(math.radians(angle - 90)))
+            point_Y = y + rayon * (math.sin(math.radians(angle - 90)))
+            points.append(point_X)
+            points.append(point_Y)
+        self.canevas.create_polygon(points, fill=fill, outline="black")
 
     def afficher_game_over(self):
         self.canevas.create_rectangle(

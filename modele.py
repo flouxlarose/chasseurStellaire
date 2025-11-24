@@ -25,11 +25,17 @@ class Mine:
     def mise_a_jour(self):
         self.y += self.vitesse
 
-# class powerUps:
-#     def __init__(self, x, y):
-#         self.x = x
-#         self.y = y
-#         self.vitesse = 4
+class PowerUps:
+    def __init__(self, x, y, vitesse, type):
+        self.x = x
+        self.y = y
+        self.vitesse = 4
+        self.inner = 10
+        self.outer = 15
+        self.type = type
+    
+    def mise_a_jour(self):
+        self.y += self.vitesse
 
 class Vaisseau:
     def __init__(self, x, y):
@@ -116,6 +122,7 @@ class Modele:
         self.vaisseau = Vaisseau(self.largeur // 2, self.hauteur - 50)
         self.ovnis = []
         self.asteroides = []
+        self.powerUps = []
         self.score = 0
         self.niveau = 1
 
@@ -139,6 +146,8 @@ class Modele:
     def mise_a_jour(self):
         self.vaisseau.mise_a_jour()
         self.vague.mise_a_jour()
+        for p in self.powerUps:
+            p.mise_a_jour()
 
         # Apparition aléatoire des ennemis
         alea_ovni = random.random()
@@ -158,6 +167,23 @@ class Modele:
                 random.randint(3, 6)
             )
             self.asteroides.append(nouvel_ast)
+
+        alea_powerup = random.random()
+        if alea_powerup < 0.01:
+            alea_type = random.randint(1,3)
+            if (alea_type == 1):
+                type = "yellow"
+            elif (alea_type == 2):
+                type = "green"
+            else:
+                type = "purple"
+            nouveau_powerUp = PowerUps(
+                random.randint(5, self.largeur-5),
+                50,
+                random.randint(2, 10),
+                type
+            )
+            self.powerUps.append(nouveau_powerUp)
 
         # Tir aléatoire des ovnis
         for o in self.vague.liste_ovnis:
