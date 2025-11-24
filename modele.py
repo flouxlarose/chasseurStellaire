@@ -160,6 +160,7 @@ class Modele:
     def mise_a_jour(self):
         self.vaisseau.mise_a_jour()
         self.vague.mise_a_jour()
+        self.vague.level_up()
 
 
         # PLUS BESOINS VUE QUE SPAWN ENNEMIS DANS VAGUE ?
