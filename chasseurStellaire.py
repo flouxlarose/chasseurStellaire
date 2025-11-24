@@ -24,6 +24,7 @@ class Controleur:
         self.modele.tirer()
 
     def rejouer(self):
+        self.vue.root.after(30, self.boucle_jeu)
         self.modele = Modele(self,600,800)
         self.vue.modele = self.modele
     
