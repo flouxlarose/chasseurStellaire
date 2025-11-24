@@ -138,7 +138,7 @@ class Modele:
         if ( not(
                 objetA.x + objetA.taille_x < objetB.x or
                 objetA.x > objetB.x + objetB.taille_x or
-                objetA.y + self.vaisseau.taille_y < objetB.y or
+                objetA.y + objetA.taille_y < objetB.y or
                 objetA.y > objetB.y + objetB.taille_y )):
                 # print(f"{objetA} + hit par + {objetB}")
                 return True
@@ -160,7 +160,7 @@ class Modele:
             self.ovnis.append(nouvel_ovni)
 
         alea_asteroide = random.random()
-        if alea_asteroide < 0.01:
+        if alea_asteroide < 0.003:
             nouvel_ast = Asteroide(
                 random.randint(0, self.largeur),
                 0,
@@ -172,7 +172,7 @@ class Modele:
         if alea_powerup < 0.01:
             alea_type = random.randint(1,3)
             if (alea_type == 1):
-                type = "yellow"
+                type = "red"
             elif (alea_type == 2):
                 type = "green"
             else:
