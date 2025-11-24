@@ -172,6 +172,10 @@ class Modele:
         # Déplacement des ennemis
         for o in self.vague.liste_ovnis:
             o.mise_a_jour()
+            # si l'ovni est en bas de l'écran se remet en haut a une pos differente en x
+            if (o.y > self.hauteur):
+                o.y = 0
+                o.x = random.randint(5, self.largeur - 5)
             if(self.collisionAvec(self.vaisseau, o)):
                 self.vaisseau.vie -= 1 
                 self.vague.liste_ovnis.remove(o)
