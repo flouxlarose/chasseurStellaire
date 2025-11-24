@@ -30,8 +30,8 @@ class PowerUps:
         self.x = x
         self.y = y
         self.vitesse = 4
-        self.inner = 10
-        self.outer = 15
+        self.taille_x = 10
+        self.taille_y = 15
         self.type = type
     
     def mise_a_jour(self):
@@ -146,8 +146,6 @@ class Modele:
     def mise_a_jour(self):
         self.vaisseau.mise_a_jour()
         self.vague.mise_a_jour()
-        for p in self.powerUps:
-            p.mise_a_jour()
 
         # Apparition aléatoire des ennemis
         alea_ovni = random.random()
@@ -211,7 +209,8 @@ class Modele:
                     self.score += 1
                     self.vague.liste_ovnis.remove(o)
                     self.vaisseau.projectiles.remove(p)
-
+        
+        # Déplacement astéroides
         for a in self.asteroides:
             a.mise_a_jour()
             if(self.collisionAvec(self.vaisseau, a)):
@@ -224,6 +223,18 @@ class Modele:
                     self.asteroides.remove(a)
                     self.vaisseau.projectiles.remove(p)
 
+        # Déplacement power ups
+        for p in self.powerUps:
+            p.mise_a_jour()
+            if (self.collisionAvec(self.vaisseau, p)):
+                if (p.type == "red"):
+                    print("powerup rouge")
+                elif (p.type == "purple"):
+                    print("powerup mauve")
+                else:
+                    print("powerup vert")
+                self.powerUps.remove(p)
+                    
 
         # Nettoyage des objets sortis de l'écran
         self.ovnis = [
