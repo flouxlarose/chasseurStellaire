@@ -89,15 +89,29 @@ class OVNI:
 
 
 class Vague:
-    def __init__(self):
+    def __init__(self, parent):
+        self.vitesse_ovni = [1, 2]
+        self.parent = parent
+        self.nombre_ovni = 10
         self.liste_ovnis = []
-        for i in range(10):
-            newOvni = OVNI(random.randint(0, 600), 0, random.randint(1,2 ))
+        self.creer_ovni()
+
+    def creer_ovni(self):
+        for i in range(self.nombre_ovni):
+            newOvni = OVNI(random.randint(0, 600), 0, self.vitesse_ovni[random.randint(0, 1)])
             self.liste_ovnis.append(newOvni)
 
     def mise_a_jour(self):
         for i in self.liste_ovnis:
             i.mise_a_jour()
+    
+    def level_up(self):
+        if (not self.liste_ovnis):
+            self.parent.niveau += 1
+            self.nombre_ovni += 5
+            self.vitesse_ovni[0] += 0.2
+            self.vitesse_ovni[1] += 0.2
+            self.creer_ovni()
 
 
 class Asteroide:
@@ -117,8 +131,8 @@ class Asteroide:
 class Modele:
     def __init__(self, parent, largeur, hauteur):
         self.parent = parent
-        self.largeur = 600
-        self.hauteur = 700
+        self.largeur = largeur
+        self.hauteur = hauteur
         self.vaisseau = Vaisseau(self.largeur // 2, self.hauteur - 50)
         self.ovnis = []
         self.asteroides = []
@@ -126,7 +140,7 @@ class Modele:
         self.score = 0
         self.niveau = 1
 
-        self.vague = Vague()
+        self.vague = Vague(self)
 
     def deplacer_vaisseau(self,x):
         self.vaisseau.deplacer(x)
@@ -147,15 +161,17 @@ class Modele:
         self.vaisseau.mise_a_jour()
         self.vague.mise_a_jour()
 
+
+        # PLUS BESOINS VUE QUE SPAWN ENNEMIS DANS VAGUE ?
         # Apparition aléatoire des ennemis
-        alea_ovni = random.random()
-        if alea_ovni < 0.02:
-            nouvel_ovni = OVNI(
-                random.randint(0, self.largeur),
-                0,
-                random.randint(2, 5)
-            )
-            self.ovnis.append(nouvel_ovni)
+        # alea_ovni = random.random()
+        # if alea_ovni < 0.02:
+        #     nouvel_ovni = OVNI(
+        #         random.randint(0, self.largeur),
+        #         0,
+        #         random.randint(2, 5)
+        #     )
+        #     self.ovnis.append(nouvel_ovni)
 
         alea_asteroide = random.random()
         if alea_asteroide < 0.003:
