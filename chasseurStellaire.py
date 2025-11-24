@@ -26,6 +26,9 @@ class Controleur:
     def rejouer(self):
         self.modele = Modele(self,600,800)
         self.vue.modele = self.modele
+    
+    def sauvegarder(self,nom):
+        self.modele.sauvegarder(nom)
 
 
 if __name__ == "__main__":

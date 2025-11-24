@@ -1,4 +1,5 @@
 import random
+import csv
 
 # ------------------ CLASSES ------------------
 
@@ -24,6 +25,11 @@ class Mine:
     def mise_a_jour(self):
         self.y += self.vitesse
 
+# class powerUps:
+#     def __init__(self, x, y):
+#         self.x = x
+#         self.y = y
+#         self.vitesse = 4
 
 class Vaisseau:
     def __init__(self, x, y):
@@ -172,6 +178,7 @@ class Modele:
             for p in self.vaisseau.projectiles:
                 if (self.collisionAvec(o, p)):
                     print("ovni détruit")
+                    self.score += 1
                     self.vague.liste_ovnis.remove(o)
                     self.vaisseau.projectiles.remove(p)
 
@@ -183,6 +190,7 @@ class Modele:
             for p in self.vaisseau.projectiles:
                 if (self.collisionAvec(a, p)):
                     print("astéroide détruit")
+                    self.score += 1
                     self.asteroides.remove(a)
                     self.vaisseau.projectiles.remove(p)
 
@@ -197,3 +205,9 @@ class Modele:
             a for a in self.asteroides
             if a.y < self.hauteur
         ]
+
+    #enregistrement des donnees
+    def sauvegarder(self,nom):
+        with open("donnees.csv", "a", newline="", encoding="utf-8") as f:
+            writer = csv.writer(f)
+            writer.writerow([nom,self.score])

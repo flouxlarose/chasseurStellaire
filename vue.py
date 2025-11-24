@@ -36,7 +36,18 @@ class Vue:
         self.label_niveau.pack(pady=10)
 
         self.btn_rejouer = tk.Button(self.frame_infos, text="Rejouer", command=self.rejouer)
-        self.btn_rejouer.pack(pady=10)
+        self.btn_rejouer.pack(pady=50)
+
+        #creer le label pour les informations 
+        self.label_nom = tk.Entry(self.frame_infos, width=10, font=("Arial", 10))
+        self.label_nom.pack(pady=10)
+
+        #compteur de score (nombre d'ennemis tués)
+        self.label_score = tk.Label(self.frame_infos, text="Score : 0", fg="white", bg="#222", font=("Arial", 12))
+        self.label_score.pack(pady=10)
+        #céer le bouton de sauvegarde
+        self.btn_sauvegarder = tk.Button(self.frame_infos, text="Sauvegarder", command=self.sauvegarder)
+        self.btn_sauvegarder.pack(pady=10)
 
     # ---------- Affichage du jeu ----------
     def afficher_jeu(self):
@@ -138,12 +149,25 @@ class Vue:
         # --- Infos ---
         self.label_vie.config(text=f"Vies : {v.vie}")
         self.label_niveau.config(text=f"Niveau : {modele.niveau}")
+        self.label_score.config(text=f"Score : {modele.score}")
 
     def afficher_game_over(self):
         self.canevas.create_rectangle(
-            50,50,
-            500,500,
+            150,150,
+            450,450,
             fill="white"
+        )
+        self.canevas.create_text(
+            300, 250,                       
+            text="GAME OVER",
+            fill="red",
+            font=("Arial", 24, "bold")
+        )
+        self.canevas.create_text(
+            300, 350,                       
+            text="Best Score: ",         #rajouter le meilleur score 
+            fill="black",
+            font=("Arial", 20, "bold")
         )
 
     def deplacer_vaisseau(self,evt):
@@ -155,3 +179,8 @@ class Vue:
 
     def rejouer(self):
         self.controleur.rejouer()
+
+    def sauvegarder(self):
+        nom = self.label_nom.get()
+        self.controleur.sauvegarder(nom)
+    
