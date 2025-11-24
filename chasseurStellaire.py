@@ -3,8 +3,8 @@ from vue import Vue
 
 class Controleur:
     def __init__(self):
-        self.modele = Modele(self,600,800)
-        self.vue = Vue(self, self.modele)
+        self.modele = Modele(self,600,700)
+        self.vue = Vue(self, 600, 700)
         self.boucle_jeu()
         self.vue.root.mainloop()
 
@@ -25,8 +25,7 @@ class Controleur:
 
     def rejouer(self):
         self.vue.root.after(30, self.boucle_jeu)
-        self.modele = Modele(self,600,800)
-        self.vue.modele = self.modele
+        self.modele = Modele(self,600,700)
     
     def sauvegarder(self,nom):
         self.modele.sauvegarder(nom)

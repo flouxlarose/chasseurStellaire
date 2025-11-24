@@ -1,9 +1,11 @@
 import tkinter as tk
+from random import randint
 
 class Vue:
-    def __init__(self, controleur, modele):
+    def __init__(self, controleur, hauteur, largeur):
         self.controleur = controleur
-        self.modele = modele
+        self.hauteur = hauteur
+        self.largeur = largeur
         self.root = tk.Tk()
         self.root.title("Vertical Shooter - MVC")
 
@@ -18,7 +20,7 @@ class Vue:
         self.frame_principale.pack()
 
     def creer_frame_canevas(self):
-        self.canevas = tk.Canvas(self.frame_principale, width=600, height=700, bg="black")
+        self.canevas = tk.Canvas(self.frame_principale, width=self.hauteur, height=self.largeur, bg="black")
         self.canevas.grid(row=0, column=0)
 
         # Bindings (la Vue gère le canevas)
@@ -51,11 +53,10 @@ class Vue:
 
     # ---------- Affichage du jeu ----------
     def afficher_jeu(self):
-        modele = self.modele
         self.canevas.delete("all")
 
         # --- Vaisseau du joueur ---
-        v = modele.vaisseau
+        v = self.controleur.modele.vaisseau
         self.canevas.create_rectangle(
             v.x - v.taille_x,
             v.y - 5,
@@ -108,7 +109,7 @@ class Vue:
         #     )
 
         # --- Vague ---
-        for o in modele.vague.liste_ovnis:
+        for o in self.controleur.modele.vague.liste_ovnis:
             self.canevas.create_rectangle(
                 o.x - o.taille_x,
                 o.y - o.taille_y,
@@ -126,7 +127,7 @@ class Vue:
             )
 
         # --- Mines ---
-        for o in modele.vague.liste_ovnis:
+        for o in self.controleur.modele.vague.liste_ovnis:
             for m in o.mines:
                 self.canevas.create_rectangle(
                     m.x + m.taille_x,
@@ -137,7 +138,7 @@ class Vue:
                 )    
 
         # --- Astéroïdes ---
-        for a in modele.asteroides:
+        for a in self.controleur.modele.asteroides:
             self.canevas.create_oval(
                 a.x - a.taille_x,
                 a.y - a.taille_y,
@@ -148,8 +149,20 @@ class Vue:
 
         # --- Infos ---
         self.label_vie.config(text=f"Vies : {v.vie}")
-        self.label_niveau.config(text=f"Niveau : {modele.niveau}")
-        self.label_score.config(text=f"Score : {modele.score}")
+        self.label_niveau.config(text=f"Niveau : {self.controleur.modele.niveau}")
+        self.label_score.config(text=f"Score : {self.controleur.modele.score}")
+    
+    def create_power_up(self, fill):
+        points = []
+        for i in range(10):
+            angle = i * 36
+            if (i % 2):
+                rayon = 10
+            else:
+                rayon = 15
+        x = randint(5, self.largeur-5)
+        
+            
 
     def afficher_game_over(self):
         self.canevas.create_rectangle(
