@@ -281,7 +281,7 @@ class Modele:
                         if (self.vaisseau.vie < 3):
                             self.vaisseau.vie += 1
                     else: 
-                        self.bouclierActif = True                      
+                        self.bouclierActif = True
                         self.effetsEnCours.append(Effets("g-1"))
 
                 self.powerUps.remove(p)
