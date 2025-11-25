@@ -132,8 +132,8 @@ class Asteroide:
         self.x = x
         self.y = y
         self.vy = vy
-        self.taille_x = 10
-        self.taille_y = 10
+        self.taille_x = random.randint(10, 25)
+        self.taille_y = random.randint(10, 25)
 
     def mise_a_jour(self):
         self.y += self.vy
