@@ -9,7 +9,7 @@ class Vue:
         self.largeur = largeur
         self.root = tk.Tk()
         self.root.title("Vertical Shooter - MVC")
-
+ 
         self.creer_fenetre_principale()
         self.creer_frame_canevas()
         self.creer_frame_infos()
@@ -153,8 +153,8 @@ class Vue:
             self.create_power_up(
                 p.x,
                 p.y,
-                p.taille_x,
-                p.taille_y,
+                p.inner,
+                p.outer,
                 p.type
             )
 

@@ -250,8 +250,10 @@ class Modele:
                     print("powerup mauve")
                 else:
                     print("powerup vert")
+                    self.powerUp_green()
+                        
+
                 self.powerUps.remove(p)
-                    
 
         # Nettoyage des objets sortis de l'écran
         self.ovnis = [
@@ -264,8 +266,26 @@ class Modele:
             if a.y < self.hauteur
         ]
 
+    #powerup vert 
+    def powerUp_green(self):
+        if(self.vaisseau.vie < 3):  
+            print("vert")
+            self.vaisseau.vie += 1
+            print(self.vaisseau.vie)
+
     #enregistrement des donnees
     def sauvegarder(self,nom):
         with open("donnees.csv", "a", newline="", encoding="utf-8") as f:
             writer = csv.writer(f)
             writer.writerow([nom,self.score])
+        
+        # score_col = []
+        # with open("donnees.csv", "r") as file: 
+        #     contenu = csv.reader(file, delimiter=',')
+        #     for row in contenu:
+        #         if len(row) > 1:
+        #             score_col.append(row[1])
+        # print(score_col)
+
+        # high = max(score_col)
+        # print(high)
