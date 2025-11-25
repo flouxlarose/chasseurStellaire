@@ -5,18 +5,18 @@ import time
 # ------------------ CLASSES ------------------
 
 class Projectile:
-    def __init__(self, x, y):
+    def __init__(self, x, y, estLarge):
         self.x = x
         self.y = y
-        self.vitesse = -10  # vers le haut
         self.taille_x = 2
+        self.vitesse = -10  # vers le haut
         self.taille_y = 10
+        if (estLarge):
+            self.taille_x = 6
+            self.vitesse = -5
 
     def mise_a_jour(self):
         self.y += self.vitesse
-    
-    def aggrandir_largeur(self):
-        self.taille_x = 10
 
 class Mine:
     def __init__(self, x, y):
@@ -52,9 +52,14 @@ class Vaisseau:
 
     def deplacer(self, x):
         self.x = x
-    def tirer(self):
-        nouveau_proj = Projectile(self.x, self.y - 20)
-        self.projectiles.append(nouveau_proj)
+    def tirer(self, multiple, large):
+        if (multiple):
+            self.projectiles.append(Projectile(self.x - 18, self.y - 20, large))
+            self.projectiles.append(Projectile(self.x, self.y - 20, large))
+            self.projectiles.append(Projectile(self.x + 18, self.y - 20, large))
+        else:
+            nouveau_proj = Projectile(self.x, self.y - 20, large)
+            self.projectiles.append(nouveau_proj)
 
     def mise_a_jour(self):
         for p in self.projectiles:
@@ -136,10 +141,7 @@ class Asteroide:
 class Effets:
     def __init__(self, type):
         self.type = type
-        # self.time = time.time()
-    
-    def poweUp_purple(self):
-        Projectile.aggrandir_largeur(self)
+        self.time = time.time()
 
     #powerup vert 
     def powerUp_green(self, vaisseau):
@@ -148,8 +150,6 @@ class Effets:
             vaisseau.vie += 1
             print(vaisseau.vie)
 
-    def mise_a_jour(self):
-        print(self)
 # ------------------ MODÈLE ------------------
 
 class Modele:
@@ -165,13 +165,16 @@ class Modele:
         self.niveau = 1
         self.effetsEnCours = []
 
+        self.projectilesLarges = False
+        self.projectilesMultiples = False
+
         self.vague = Vague(self)
 
     def deplacer_vaisseau(self,x):
         self.vaisseau.deplacer(x)
 
     def tirer(self):
-        self.vaisseau.tirer()
+        self.vaisseau.tirer(self.projectilesMultiples, self.projectilesLarges)
 
     def collisionAvec(self, objetA, objetB):
         if ( not(
@@ -272,8 +275,13 @@ class Modele:
                 if (p.type == "red"):
                     self.vague.kill_all()
                 elif (p.type == "purple"):
-                    Effets.poweUp_purple(self)
-                else:
+                    if (random.randint(1,2) % 2):
+                        self.projectilesMultiples = True
+                        self.effetsEnCours.append(Effets("p-1"))
+                    else: 
+                        self.projectilesLarges = True
+                        self.effetsEnCours.append(Effets("p-2"))
+                else: 
                     self.effetsEnCours.append(Effets("green"))
 
                 self.powerUps.remove(p)
@@ -290,7 +298,13 @@ class Modele:
         ]
 
         for e in self.effetsEnCours:
-            e.mise_a_jour()
+            if (time.time() - e.time > 10):
+                self.effetsEnCours.remove(e)
+                if (e.type == "p-1"):
+                    self.projectilesMultiples = False
+                elif (e.type == "p-2"):
+                    self.projectilesLarges = False
+
 
     #enregistrement des donnees
     def sauvegarder(self,nom):
