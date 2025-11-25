@@ -153,8 +153,8 @@ class Vue:
             self.create_power_up(
                 p.x,
                 p.y,
-                p.inner,
-                p.outer,
+                p.taille_x,
+                p.taille_y,
                 p.type
             )
 

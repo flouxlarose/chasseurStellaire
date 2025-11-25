@@ -128,11 +128,19 @@ class Asteroide:
 
 class Effets:
     def __init__(self, type):
+        self.compteur = 0
         self.type = type
         self.time = time.time()
     
     def mise_a_jour(self):
         pass
+
+    #powerup vert 
+    def powerUp_green(self, vaisseau):
+        if(vaisseau.vie < 3):  
+            print("vert")
+            vaisseau.vie += 1
+            print(vaisseau.vie)
 
 # ------------------ MODÈLE ------------------
 
@@ -259,8 +267,7 @@ class Modele:
                     print("powerup mauve")
                 else:
                     print("powerup vert")
-                    self.powerUp_green()
-                        
+                    self.effetsEnCours.append(Effets("green"))
 
                 self.powerUps.remove(p)
 
@@ -274,13 +281,6 @@ class Modele:
             a for a in self.asteroides
             if a.y < self.hauteur
         ]
-
-    #powerup vert 
-    def powerUp_green(self):
-        if(self.vaisseau.vie < 3):  
-            print("vert")
-            self.vaisseau.vie += 1
-            print(self.vaisseau.vie)
 
     #enregistrement des donnees
     def sauvegarder(self,nom):
