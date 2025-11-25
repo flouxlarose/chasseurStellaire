@@ -52,6 +52,7 @@ class Vaisseau:
 
     def deplacer(self, x):
         self.x = x
+    
     def tirer(self, multiple, large):
         if (multiple):
             self.projectiles.append(Projectile(self.x - 18, self.y - 20, large))
@@ -160,6 +161,7 @@ class Modele:
 
         self.projectilesLarges = False
         self.projectilesMultiples = False
+        self.bouclierActif = False
 
         self.vague = Vague(self)
 
@@ -227,7 +229,7 @@ class Modele:
             if alea_tir < 0.01:
                 o.tirer()
             for m in o.mines:
-                if (self.collisionAvec(self.vaisseau, m)):
+                if (self.collisionAvec(self.vaisseau, m) and not self.bouclierActif):
                     self.vaisseau.vie -= 1
                     o.mines.remove(m)
 
@@ -279,6 +281,7 @@ class Modele:
                         if (self.vaisseau.vie < 3):
                             self.vaisseau.vie += 1
                     else: 
+                        self.bouclierActif = True                      
                         self.effetsEnCours.append(Effets("g-1"))
 
                 self.powerUps.remove(p)
@@ -302,6 +305,8 @@ class Modele:
                     self.projectilesMultiples = False
                 elif (e.type == "p-2"):
                     self.projectilesLarges = False
+                elif (e.type == "g-1"):
+                    self.bouclierActif = False
 
 
     #enregistrement des donnees

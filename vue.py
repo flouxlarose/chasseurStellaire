@@ -80,6 +80,18 @@ class Vue:
             fill="white",
             width=2
         )
+        #bouclier 
+        rayon = 40
+        if (self.controleur.modele.bouclierActif):
+            self.canevas.create_oval(
+                v.x - rayon,
+                v.y - rayon,
+                v.x + rayon,
+                v.y + rayon,
+                outline="red",
+                width=3
+            )
+
 
         # --- Projectiles ---
         for p in v.projectiles:
@@ -157,6 +169,7 @@ class Vue:
                 p.taille_y,
                 p.type
             )
+        
 
         # --- Infos ---
         self.label_vie.config(text=f"Vies : {v.vie}")
