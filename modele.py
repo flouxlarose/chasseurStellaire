@@ -143,13 +143,6 @@ class Effets:
         self.type = type
         self.time = time.time()
 
-    #powerup vert 
-    def powerUp_green(self, vaisseau):
-        if(vaisseau.vie < 3):  
-            print("vert")
-            vaisseau.vie += 1
-            print(vaisseau.vie)
-
 # ------------------ MODÈLE ------------------
 
 class Modele:
@@ -282,7 +275,11 @@ class Modele:
                         self.projectilesLarges = True
                         self.effetsEnCours.append(Effets("p-2"))
                 else: 
-                    self.effetsEnCours.append(Effets("green"))
+                    if (random.randint(1,2) % 2):
+                        if (self.vaisseau.vie < 3):
+                            self.vaisseau.vie += 1
+                    else: 
+                        self.effetsEnCours.append(Effets("g-1"))
 
                 self.powerUps.remove(p)
 
@@ -296,7 +293,8 @@ class Modele:
             a for a in self.asteroides
             if a.y < self.hauteur
         ]
-
+        
+        # Compte le temps restant pour chaque effet en cours
         for e in self.effetsEnCours:
             if (time.time() - e.time > 10):
                 self.effetsEnCours.remove(e)
