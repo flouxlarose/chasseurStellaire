@@ -14,6 +14,9 @@ class Projectile:
 
     def mise_a_jour(self):
         self.y += self.vitesse
+    
+    def aggrandir_largeur(self):
+        self.taille_x = 10
 
 class Mine:
     def __init__(self, x, y):
@@ -113,6 +116,10 @@ class Vague:
             self.vitesse_ovni[0] += 0.2
             self.vitesse_ovni[1] += 0.2
             self.creer_ovni()
+    
+    def kill_all(self):
+        for o in self.liste_ovnis:
+            self.liste_ovnis.remove(o)
 
 
 class Asteroide:
@@ -128,12 +135,11 @@ class Asteroide:
 
 class Effets:
     def __init__(self, type):
-        self.compteur = 0
         self.type = type
-        self.time = time.time()
+        # self.time = time.time()
     
-    def mise_a_jour(self):
-        pass
+    def poweUp_purple(self):
+        Projectile.aggrandir_largeur(self)
 
     #powerup vert 
     def powerUp_green(self, vaisseau):
@@ -142,6 +148,8 @@ class Effets:
             vaisseau.vie += 1
             print(vaisseau.vie)
 
+    def mise_a_jour(self):
+        print(self)
 # ------------------ MODÈLE ------------------
 
 class Modele:
@@ -168,8 +176,8 @@ class Modele:
     def collisionAvec(self, objetA, objetB):
         if ( not(
                 objetA.x + objetA.taille_x < objetB.x or
-                objetA.x > objetB.x + objetB.taille_x or
                 objetA.y + objetA.taille_y < objetB.y or
+                objetA.x > objetB.x + objetB.taille_x or
                 objetA.y > objetB.y + objetB.taille_y )):
                 # print(f"{objetA} + hit par + {objetB}")
                 return True
@@ -202,10 +210,10 @@ class Modele:
 
         alea_powerup = random.random()
         if alea_powerup < 0.01:
-            alea_type = random.randint(1,3)
-            if (alea_type == 1):
+            alea_type = random.randint(1,30)
+            if (alea_type < 5):
                 type = "red"
-            elif (alea_type == 2):
+            elif (alea_type < 15):
                 type = "green"
             else:
                 type = "purple"
@@ -262,11 +270,10 @@ class Modele:
             p.mise_a_jour()
             if (self.collisionAvec(self.vaisseau, p)):
                 if (p.type == "red"):
-                    self.effetsEnCours.append(Effets("red"))
+                    self.vague.kill_all()
                 elif (p.type == "purple"):
-                    print("powerup mauve")
+                    Effets.poweUp_purple(self)
                 else:
-                    print("powerup vert")
                     self.effetsEnCours.append(Effets("green"))
 
                 self.powerUps.remove(p)
@@ -281,6 +288,9 @@ class Modele:
             a for a in self.asteroides
             if a.y < self.hauteur
         ]
+
+        for e in self.effetsEnCours:
+            e.mise_a_jour()
 
     #enregistrement des donnees
     def sauvegarder(self,nom):
