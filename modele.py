@@ -1,5 +1,6 @@
 import random
 import csv
+import time
 
 # ------------------ CLASSES ------------------
 
@@ -125,6 +126,13 @@ class Asteroide:
     def mise_a_jour(self):
         self.y += self.vy
 
+class Effets:
+    def __init__(self, type):
+        self.type = type
+        self.time = time.time()
+    
+    def mise_a_jour(self):
+        pass
 
 # ------------------ MODÈLE ------------------
 
@@ -139,6 +147,7 @@ class Modele:
         self.powerUps = []
         self.score = 0
         self.niveau = 1
+        self.effetsEnCours = []
 
         self.vague = Vague(self)
 
@@ -245,7 +254,7 @@ class Modele:
             p.mise_a_jour()
             if (self.collisionAvec(self.vaisseau, p)):
                 if (p.type == "red"):
-                    print("powerup rouge")
+                    self.effetsEnCours.append(Effets("red"))
                 elif (p.type == "purple"):
                     print("powerup mauve")
                 else:
