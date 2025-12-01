@@ -3,9 +3,9 @@ from vue import Vue
 
 class Controleur:
     def __init__(self):
-        self.modele = Modele(self,600,700)
         self.vue = Vue(self, 600, 700)
-        self.boucle_jeu()
+        self.modele = Modele(self,600,700)
+
         self.vue.root.mainloop()
 
     def boucle_jeu(self):
@@ -17,6 +17,13 @@ class Controleur:
             self.vue.afficher_game_over()
 
     # Méthodes appelées par la Vue (via bindings)
+    def commencer_jeu(self):
+        self.modele.niveau = self.vue.radio_value.get()
+        self.vue.frame_titre.destroy()
+        self.vue.creer_frame_canevas()
+        self.vue.creer_frame_infos()
+        self.boucle_jeu()
+
     def deplacer_vaisseau(self, x):
         self.modele.deplacer_vaisseau(x)
 

@@ -11,14 +11,31 @@ class Vue:
         self.root.title("Vertical Shooter - MVC")
  
         self.creer_fenetre_principale()
-        self.creer_frame_canevas()
-        self.creer_frame_infos()
+        self.creer_ecran_titre()
 
 
     # ---------- Création de l'interface ----------
     def creer_fenetre_principale(self):
         self.frame_principale = tk.Frame(self.root)
         self.frame_principale.pack()
+
+    def creer_ecran_titre(self):
+        self.frame_titre = tk.Frame(self.frame_principale, width=1000, height=400, bg="black")
+        self.frame_titre.pack()
+        self.frame_titre.propagate(False)
+
+        self.label_titre = tk.Label(self.frame_titre, text="CHASSEUR STELLAIRE", bg="black", fg="red", font=("Times New Roman", 20))
+        self.label_titre.pack()
+
+        self.radio_value = tk.IntVar()
+        self.radio_value.set(3)
+
+        for i, (texte, valeur) in enumerate([("Facile", 1), ("Normal", 3), ("Difficile", 6)]):
+            self.difficulte = tk.Radiobutton(self.frame_titre, text=texte, variable=self.radio_value, value=valeur, width=10, background="red")
+            self.difficulte.pack()
+
+        self.bouton_jouer = tk.Button(self.frame_titre, width=10, height=1, text="Jouer", command=self.controleur.commencer_jeu)
+        self.bouton_jouer.pack(pady=50)
 
     def creer_frame_canevas(self):
         self.canevas = tk.Canvas(self.frame_principale, width=self.hauteur, height=self.largeur, bg="black")

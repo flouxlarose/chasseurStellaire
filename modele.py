@@ -156,7 +156,7 @@ class Modele:
         self.asteroides = []
         self.powerUps = []
         self.score = 0
-        self.niveau = 1
+        self.niveau = self.parent.vue.radio_value.get()
         self.effetsEnCours = []
 
         self.projectilesLarges = False
