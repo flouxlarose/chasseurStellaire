@@ -23,8 +23,10 @@ class Controleur:
     def tirer(self):
         self.modele.tirer()
 
-    def rejouer(self):
+    def rejouer(self, isGameOver):
         self.modele = Modele(self,600,700)
+        if (isGameOver):
+            self.boucle_jeu()
     
     def sauvegarder(self,nom):
         self.modele.sauvegarder(nom)
