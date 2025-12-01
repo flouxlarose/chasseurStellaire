@@ -172,11 +172,40 @@ class Modele:
         self.vaisseau.tirer(self.projectilesMultiples, self.projectilesLarges)
 
     def collisionAvec(self, objetA, objetB):
-        if ( not(
-                objetA.x + objetA.taille_x < objetB.x or
-                objetA.y + objetA.taille_y < objetB.y or
-                objetA.x > objetB.x + objetB.taille_x or
-                objetA.y > objetB.y + objetB.taille_y )):
+        x1 = objetA.x - objetA.taille_x
+        y1 = objetA.y - objetA.taille_y
+        x2 = objetA.x + objetA.taille_x
+        y2 = objetA.y + objetA.taille_y
+
+        a1 = objetA.x - objetA.taille_x
+        b1 = objetA.y + objetA.taille_y
+        a2 = objetA.x + objetA.taille_x
+        b2 = objetA.y - objetA.taille_y
+
+        z1 = objetB.x - objetB.taille_x
+        w1 = objetB.y - objetB.taille_y
+        z2 = objetB.x + objetB.taille_x
+        w2 = objetB.y + objetB.taille_y
+
+        c1 = objetB.x - objetB.taille_x
+        d1 = objetB.y + objetB.taille_y
+        c2 = objetB.x + objetB.taille_x
+        d2 = objetB.y - objetB.taille_y
+        if ((
+                (
+                    z1 >= x1 and z1 <= x2 and
+                    w1 >= y1 and w1 <= y2 or
+                    z2 >= x1 and z2 <= x2 and
+                    w2 >= y1 and w2 <= y2
+                )
+                or
+                (
+                    c2 >= a1 and c2 <= a2 and
+                    d2 >= b1 and d2 <= b2 or
+                    c1 >= a1 and c1 <= a2 and
+                    d1 >= b1 and d1 <= b2
+                )
+            )):
                 # print(f"{objetA} + hit par + {objetB}")
                 return True
         
@@ -313,15 +342,15 @@ class Modele:
     def sauvegarder(self,nom):
         with open("donnees.csv", "a", newline="", encoding="utf-8") as f:
             writer = csv.writer(f)
-            writer.writerow([nom,self.score])
-        
-        # score_col = []
-        # with open("donnees.csv", "r") as file: 
-        #     contenu = csv.reader(file, delimiter=',')
-        #     for row in contenu:
-        #         if len(row) > 1:
-        #             score_col.append(row[1])
-        # print(score_col)
+            writer.writerow([nom,self.score*100])
+    
+    def highScore(self):
+        score_col = []
+        with open("donnees.csv", "r") as file: 
+            contenu = csv.reader(file, delimiter=',')
+            for row in contenu:
+                if len(row) > 1:
+                    score_col.append(int(row[1]))
 
-        # high = max(score_col)
-        # print(high)
+        high = max(score_col)
+        return high 
