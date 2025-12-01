@@ -313,15 +313,15 @@ class Modele:
     def sauvegarder(self,nom):
         with open("donnees.csv", "a", newline="", encoding="utf-8") as f:
             writer = csv.writer(f)
-            writer.writerow([nom,self.score])
-        
-        # score_col = []
-        # with open("donnees.csv", "r") as file: 
-        #     contenu = csv.reader(file, delimiter=',')
-        #     for row in contenu:
-        #         if len(row) > 1:
-        #             score_col.append(row[1])
-        # print(score_col)
+            writer.writerow([nom,self.score*100])
+    
+    def highScore(self):
+        score_col = []
+        with open("donnees.csv", "r") as file: 
+            contenu = csv.reader(file, delimiter=',')
+            for row in contenu:
+                if len(row) > 1:
+                    score_col.append(int(row[1]))
 
-        # high = max(score_col)
-        # print(high)
+        high = max(score_col)
+        return high 

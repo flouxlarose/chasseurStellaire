@@ -42,7 +42,7 @@ class Vue:
         self.btn_rejouer.pack(pady=50)
 
         #creer le label pour les informations 
-        self.label_nom = tk.Entry(self.frame_infos, width=10, font=("Arial", 10))
+        self.label_nom = tk.Entry(self.frame_infos, width=25, font=("Arial", 10))
         self.label_nom.pack(pady=10)
 
         #compteur de score (nombre d'ennemis tués)
@@ -174,7 +174,7 @@ class Vue:
         # --- Infos ---
         self.label_vie.config(text=f"Vies : {v.vie}")
         self.label_niveau.config(text=f"Niveau : {self.controleur.modele.niveau}")
-        self.label_score.config(text=f"Score : {self.controleur.modele.score}")
+        self.label_score.config(text=f"Score : {self.controleur.modele.score * 100}")
     
     def create_power_up(self, x, y, inner, outer, fill):
         points = []
@@ -202,9 +202,10 @@ class Vue:
             fill="red",
             font=("Arial", 24, "bold")
         )
+        highScore = self.controleur.modele.highScore()
         self.canevas.create_text(
             300, 350,                       
-            text="Best Score: ",         #rajouter le meilleur score 
+            text=f"Best Score: {highScore}",         #rajouter le meilleur score 
             fill="black",
             font=("Arial", 20, "bold")
         )
