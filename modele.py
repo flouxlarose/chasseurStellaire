@@ -240,7 +240,7 @@ class Modele:
             if (o.y > self.hauteur):
                 o.y = 0
                 o.x = random.randint(5, self.largeur - 5)
-            if(self.collisionAvec(self.vaisseau, o)):
+            if(self.collisionAvec(self.vaisseau, o) and not self.bouclierActif):
                 self.vaisseau.vie -= 1 
                 self.vague.liste_ovnis.remove(o)
             for p in self.vaisseau.projectiles:
@@ -253,7 +253,7 @@ class Modele:
         # Déplacement astéroides
         for a in self.asteroides:
             a.mise_a_jour()
-            if(self.collisionAvec(self.vaisseau, a)):
+            if(self.collisionAvec(self.vaisseau, a) and not self.bouclierActif):
                 self.vaisseau.vie -= 1
                 self.asteroides.remove(a)
             for p in self.vaisseau.projectiles:
