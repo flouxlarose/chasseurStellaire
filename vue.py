@@ -62,7 +62,7 @@ class Vue:
             v.x - v.taille_x,
             v.y - 5,
             v.x + v.taille_x,
-            v.y + 5,
+            v.y,
             fill="blue"
         )
         self.canevas.create_oval(
@@ -218,7 +218,7 @@ class Vue:
         self.controleur.tirer()
 
     def rejouer(self):
-        self.controleur.rejouer()
+        self.controleur.rejouer(self.controleur.modele.vaisseau.vie == 0)
 
     def sauvegarder(self):
         nom = self.label_nom.get()
