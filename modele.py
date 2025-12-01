@@ -274,7 +274,6 @@ class Modele:
                 self.vague.liste_ovnis.remove(o)
             for p in self.vaisseau.projectiles:
                 if (self.collisionAvec(o, p)):
-                    print("ovni détruit")
                     self.score += 1
                     self.vague.liste_ovnis.remove(o)
                     self.vaisseau.projectiles.remove(p)
@@ -287,7 +286,6 @@ class Modele:
                 self.asteroides.remove(a)
             for p in self.vaisseau.projectiles:
                 if (self.collisionAvec(a, p)):
-                    print("astéroide détruit")
                     self.score += 1
                     self.asteroides.remove(a)
                     self.vaisseau.projectiles.remove(p)
