@@ -33,7 +33,7 @@ class PowerUps:
     def __init__(self, x, y, vitesse, type):
         self.x = x
         self.y = y
-        self.vitesse = 4
+        self.vitesse = vitesse
         self.taille_x = 10
         self.taille_y = 15
         self.type = type
@@ -161,6 +161,7 @@ class Modele:
 
         self.projectilesLarges = False
         self.projectilesMultiples = False
+        self.projectilesInvincibles = False
         self.bouclierActif = False
 
         self.vague = Vague(self)
@@ -270,13 +271,16 @@ class Modele:
                 o.y = 0
                 o.x = random.randint(5, self.largeur - 5)
             if(self.collisionAvec(self.vaisseau, o) and not self.bouclierActif):
-                self.vaisseau.vie -= 1 
-                self.vague.liste_ovnis.remove(o)
+                self.vaisseau.vie -= 1
+                if (o in self.vague.liste_ovnis): 
+                    self.vague.liste_ovnis.remove(o)
             for p in self.vaisseau.projectiles:
                 if (self.collisionAvec(o, p)):
                     self.score += 1
-                    self.vague.liste_ovnis.remove(o)
-                    self.vaisseau.projectiles.remove(p)
+                    if (o in self.vague.liste_ovnis):
+                        self.vague.liste_ovnis.remove(o)
+                    if (not self.projectilesInvincibles):
+                        self.vaisseau.projectiles.remove(p)
         
         # Déplacement astéroides
         for a in self.asteroides:
@@ -297,12 +301,16 @@ class Modele:
                 if (p.type == "red"):
                     self.vague.kill_all()
                 elif (p.type == "purple"):
-                    if (random.randint(1,2) % 2):
+                    rng = random.randint(1,3)
+                    if (rng == 1):
                         self.projectilesMultiples = True
                         self.effetsEnCours.append(Effets("p-1"))
-                    else: 
+                    elif (rng == 2): 
                         self.projectilesLarges = True
                         self.effetsEnCours.append(Effets("p-2"))
+                    elif (rng == 3):
+                        self.projectilesInvincibles = True
+                        self.effetsEnCours.append(Effets("p-3"))
                 else: 
                     if (random.randint(1,2) % 2):
                         if (self.vaisseau.vie < 3):
@@ -332,6 +340,8 @@ class Modele:
                     self.projectilesMultiples = False
                 elif (e.type == "p-2"):
                     self.projectilesLarges = False
+                elif (e.type == "p-3"):
+                    self.projectilesInvincibles = False
                 elif (e.type == "g-1"):
                     self.bouclierActif = False
 
