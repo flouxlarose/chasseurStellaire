@@ -298,7 +298,7 @@ class Modele:
             for p in self.vaisseau.projectiles:
                 if (self.collisionAvec(o, p)):
                     o.vie -= 1
-                    if (o.vie <= 0):
+                    if (o.vie <= 0 and o in self.vague.liste_ovnis):
                         self.score += 1
                         self.vague.liste_ovnis.remove(o)
                     self.vaisseau.projectiles.remove(p)
