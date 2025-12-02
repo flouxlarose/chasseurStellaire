@@ -140,32 +140,51 @@ class Vue:
 
         # --- Vague ---
         for o in self.controleur.modele.vague.liste_ovnis:
-            self.canevas.create_rectangle(
-                o.x - o.taille_x,
-                o.y - o.taille_y,
-                o.x + o.taille_x,
-                o.y + o.taille_y,
-                fill="yellow"
-            )
-            self.canevas.create_line(
-                o.x,
-                o.y + o.taille_y,
-                o.x,
-                o.y + o.taille_y + 6,
-                fill="red",
-                width=2
-            )
+            if (o.type == "normal"):
+                self.canevas.create_rectangle(
+                    o.x - o.taille_x,
+                    o.y - o.taille_y,
+                    o.x + o.taille_x,
+                    o.y + o.taille_y,
+                    fill="yellow",
+                    outline="red"
+                )
+                self.canevas.create_line(
+                    o.x,
+                    o.y + o.taille_y,
+                    o.x,
+                    o.y + o.taille_y + 6,
+                    fill="red",
+                    width=2
+                )
+            elif (o.type == "boss"):
+                self.canevas.create_rectangle(
+                    o.x - o.taille_x,
+                    o.y - o.taille_y,
+                    o.x + o.taille_x,
+                    o.y + o.taille_y,
+                    fill="red",
+                    outline="yellow"
+                )
+                self.canevas.create_line(
+                    o.x,
+                    o.y + o.taille_y,
+                    o.x,
+                    o.y + o.taille_y + 6,
+                    fill="blue",
+                    width=8
+                )
 
         # --- Mines ---
         for o in self.controleur.modele.vague.liste_ovnis:
             for m in o.mines:
                 self.canevas.create_rectangle(
-                    m.x + m.taille_x,
-                    m.y + m.taille_x,
                     m.x - m.taille_x,
-                    m.y,
+                    m.y - m.taille_x,
+                    m.x + m.taille_x,
+                    m.y + m.taille_y,
                     fill="red"
-                )    
+                )
 
         # --- Astéroïdes ---
         for a in self.controleur.modele.asteroides:

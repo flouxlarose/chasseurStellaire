@@ -19,12 +19,12 @@ class Projectile:
         self.y += self.vitesse
 
 class Mine:
-    def __init__(self, x, y):
+    def __init__(self, x, y, taille_x, taille_y):
         self.x = x
         self.y = y
         self.vitesse = 4   # vers le bas
-        self.taille_x = 5     # est un carré donc meme taille pour les deux côté
-        self.taille_y = 5
+        self.taille_x = taille_x     # est un carré donc meme taille pour les deux côté
+        self.taille_y = taille_y
 
     def mise_a_jour(self):
         self.y += self.vitesse
@@ -74,16 +74,22 @@ class Vaisseau:
 
 
 class OVNI:
-    def __init__(self, x, y, vy):
+    def __init__(self, x, y, vy, taille_x, taille_y, type):
+        self.type = type
         self.x = x
         self.y = y
         self.vy = vy
-        self.taille_x = 12
-        self.taille_y = 6
+        self.taille_x = taille_x
+        self.taille_y = taille_y
         self.mines = []
+        self.vie = 3 if (self.type == "boss") else 1
 
     def tirer(self):
-        nouvelle_mine = Mine(self.x, self.y + 10)
+        if(self.type == "normal"):
+            taille = 5
+        elif (self.type == "boss"):
+            taille = 10
+        nouvelle_mine = Mine(self.x, self.y + 10, taille, taille)
         self.mines.append(nouvelle_mine)
 
     def mise_a_jour(self):
@@ -100,15 +106,22 @@ class OVNI:
 
 class Vague:
     def __init__(self, parent):
+        self.premier_tick = False
         self.vitesse_ovni = [1, 2]
         self.parent = parent
         self.nombre_ovni = 10
         self.liste_ovnis = []
-        self.creer_ovni()
+        self.nombre_boss = 0
+        self.level_up()
 
     def creer_ovni(self):
         for i in range(self.nombre_ovni):
-            newOvni = OVNI(random.randint(0, 600), 0, self.vitesse_ovni[random.randint(0, 1)])
+            newOvni = OVNI(random.randint(0, 600), 0, self.vitesse_ovni[random.randint(0, 1)], 12, 6, "normal")
+            self.liste_ovnis.append(newOvni)
+    
+    def creer_ovni_boss(self):
+        for i in range(self.nombre_boss):
+            newOvni = OVNI(random.randint(0, 600), 0, self.vitesse_ovni[random.randint(0, 1)], 20, 14, "boss")
             self.liste_ovnis.append(newOvni)
 
     def mise_a_jour(self):
@@ -117,11 +130,19 @@ class Vague:
     
     def level_up(self):
         if (not self.liste_ovnis):
-            self.parent.niveau += 1
-            self.nombre_ovni += 5
-            self.vitesse_ovni[0] += 0.2
-            self.vitesse_ovni[1] += 0.2
+            
+            if(self.premier_tick):
+                self.parent.niveau += 1
+            else:
+                self.premier_tick = True
+                
+            self.nombre_ovni = 10 + (5 * self.parent.niveau)
+            self.vitesse_ovni[0] = self.vitesse_ovni[0] + (0.2 * self.parent.niveau)
+            self.vitesse_ovni[1] = self.vitesse_ovni[1] + (0.2 * self.parent.niveau)
             self.creer_ovni()
+            if (self.parent.niveau % 3 == 0):
+                self.nombre_boss = int(self.parent.niveau / 3)
+                self.creer_ovni_boss()
     
     def kill_all(self):
         for o in self.liste_ovnis:
@@ -276,11 +297,11 @@ class Modele:
                     self.vague.liste_ovnis.remove(o)
             for p in self.vaisseau.projectiles:
                 if (self.collisionAvec(o, p)):
-                    self.score += 1
-                    if (o in self.vague.liste_ovnis):
+                    o.vie -= 1
+                    if (o.vie <= 0):
+                        self.score += 1
                         self.vague.liste_ovnis.remove(o)
-                    if (not self.projectilesInvincibles):
-                        self.vaisseau.projectiles.remove(p)
+                    self.vaisseau.projectiles.remove(p)
         
         # Déplacement astéroides
         for a in self.asteroides:
