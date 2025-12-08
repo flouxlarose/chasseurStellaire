@@ -40,6 +40,7 @@ class Controleur:
 
     def rejouer(self, isGameOver):
         self.modele = Modele(self,600,700)
+        self.modele.creer_vague()
         if (isGameOver):
             self.boucle_jeu()
     
