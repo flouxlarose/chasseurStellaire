@@ -19,10 +19,10 @@ class Projectile:
         self.y += self.vitesse
 
 class Mine:
-    def __init__(self, x, y, taille_x, taille_y):
+    def __init__(self, x, y, taille_x, taille_y, vitesse):
         self.x = x
         self.y = y
-        self.vitesse = 4   # vers le bas
+        self.vitesse = vitesse   # vers le bas
         self.taille_x = taille_x     # est un carré donc meme taille pour les deux côté
         self.taille_y = taille_y
 
@@ -89,7 +89,7 @@ class OVNI:
             taille = 5
         elif (self.type == "boss"):
             taille = 10
-        nouvelle_mine = Mine(self.x, self.y + 10, taille, taille)
+        nouvelle_mine = Mine(self.x, self.y + 10, taille, taille, self.vy + 1.5)
         self.mines.append(nouvelle_mine)
 
     def mise_a_jour(self, ennemisLents):
