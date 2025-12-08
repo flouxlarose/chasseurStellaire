@@ -393,6 +393,8 @@ class Modele:
                 elif (e.type == "r-1"):
                     self.ennemisLents = False
 
+    def alive(self): 
+        return self.vaisseau.vie > 0
 
     #enregistrement des donnees
     def sauvegarder(self,nom):
