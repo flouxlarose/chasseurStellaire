@@ -49,6 +49,11 @@ class Vaisseau:
         self.projectiles = []
         self.taille_x = 15
         self.taille_y = 15
+        self.couleur_base = "blue"
+        self.couleur_alt = "red"
+        self.couleur = self.couleur_base
+        self.couleur_dif = False
+        self.cpt_couleur = 0
 
     def deplacer(self, x):
         self.x = x
@@ -61,8 +66,19 @@ class Vaisseau:
         else:
             nouveau_proj = Projectile(self.x, self.y - 20, large)
             self.projectiles.append(nouveau_proj)
+    
+    def animation_couleur(self):
+        self.cpt_couleur = 30
 
     def mise_a_jour(self):
+        # changement couleur
+        if(self.cpt_couleur > 0):
+            if((self.cpt_couleur % 4) == 0):
+                self.couleur = self.couleur_alt
+            else:
+                self.couleur = self.couleur_base
+            self.cpt_couleur -= 1
+
         for p in self.projectiles:
             p.mise_a_jour()
 
@@ -284,6 +300,7 @@ class Modele:
             for m in o.mines:
                 if (self.collisionAvec(self.vaisseau, m) and not self.bouclierActif):
                     self.vaisseau.vie -= 1
+                    self.vaisseau.animation_couleur()
                     o.mines.remove(m)
 
         # Déplacement des ennemis
@@ -295,6 +312,7 @@ class Modele:
                 o.x = random.randint(5, self.largeur - 5)
             if(self.collisionAvec(self.vaisseau, o) and not self.bouclierActif):
                 self.vaisseau.vie -= 1
+                self.vaisseau.animation_couleur()
                 if (o in self.vague.liste_ovnis): 
                     self.vague.liste_ovnis.remove(o)
             for p in self.vaisseau.projectiles:

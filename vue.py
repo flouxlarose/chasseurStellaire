@@ -80,7 +80,7 @@ class Vue:
             v.y - 5,
             v.x + v.taille_x,
             v.y,
-            fill="blue"
+            fill=v.couleur
         )
         self.canevas.create_oval(
             v.x - (v.taille_x // 2),
