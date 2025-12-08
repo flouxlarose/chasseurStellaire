@@ -92,8 +92,8 @@ class OVNI:
         nouvelle_mine = Mine(self.x, self.y + 10, taille, taille)
         self.mines.append(nouvelle_mine)
 
-    def mise_a_jour(self):
-        self.y += self.vy
+    def mise_a_jour(self, ennemisLents):
+        self.y += self.vy if not ennemisLents else self.vy / 2
 
         for m in self.mines:
             m.mise_a_jour()
@@ -126,7 +126,7 @@ class Vague:
 
     def mise_a_jour(self):
         for i in self.liste_ovnis:
-            i.mise_a_jour()
+            i.mise_a_jour(self.parent.ennemisLents)
     
     def level_up(self):
         if (not self.liste_ovnis):
@@ -183,7 +183,9 @@ class Modele:
         self.projectilesLarges = False
         self.projectilesMultiples = False
         self.projectilesInvincibles = False
+        self.tirContinu = False
         self.bouclierActif = False
+        self.ennemisLents = False
 
         self.vague = Vague(self)
 
@@ -286,7 +288,7 @@ class Modele:
 
         # Déplacement des ennemis
         for o in self.vague.liste_ovnis:
-            o.mise_a_jour()
+            o.mise_a_jour(self.ennemisLents)
             # si l'ovni est en bas de l'écran se remet en haut a une pos differente en x
             if (o.y > self.hauteur):
                 o.y = 0
@@ -320,31 +322,44 @@ class Modele:
             p.mise_a_jour()
             if (self.collisionAvec(self.vaisseau, p)):
                 if (p.type == "red"):
-                    self.vague.kill_all()
+                    if (random.randint(1,5) % 2):
+                        self.vague.kill_all()
+                    else:
+                        self.effetsEnCours.append(Effets("r-1"))
+                        print("r-lent")
                 elif (p.type == "purple"):
-                    rng = random.randint(1,3)
-                    if (rng == 1):
+                    rng = random.randint(1,30)
+                    if (rng <= 7):
                         self.projectilesMultiples = True
                         self.effetsEnCours.append(Effets("p-1"))
-                    elif (rng == 2): 
+                        print("p-mult")
+                    elif (rng <= 15): 
                         self.projectilesLarges = True
                         self.effetsEnCours.append(Effets("p-2"))
-                    elif (rng == 3):
+                        print("p-larg")
+                    elif (rng <= 25):
                         self.projectilesInvincibles = True
                         self.effetsEnCours.append(Effets("p-3"))
+                        print("p-inv")
+                    elif (rng <= 30):
+                        self.tirContinu = True
+                        self.effetsEnCours.append(Effets("p-4"))
+                        print("p-continu")
                 else: 
                     if (random.randint(1,2) % 2):
                         if (self.vaisseau.vie < 3):
                             self.vaisseau.vie += 1
+                            print("g-vie")
                     else: 
                         self.bouclierActif = True
                         self.effetsEnCours.append(Effets("g-1"))
+                        print("g-bouclier")
 
                 self.powerUps.remove(p)
 
         # Nettoyage des objets sortis de l'écran
         self.ovnis = [
-            o for o in self.ovnis
+            o for o in self.ovnis 
             if o.y < self.hauteur
         ]
 
@@ -353,6 +368,9 @@ class Modele:
             if a.y < self.hauteur
         ]
         
+        if (self.tirContinu):
+            self.vaisseau.tirer(self.projectilesMultiples, self.projectilesLarges)
+
         # Compte le temps restant pour chaque effet en cours
         for e in self.effetsEnCours:
             if (time.time() - e.time > 10):
@@ -363,8 +381,12 @@ class Modele:
                     self.projectilesLarges = False
                 elif (e.type == "p-3"):
                     self.projectilesInvincibles = False
+                elif (e.type == "p-4"):
+                    self.tirContinu = False
                 elif (e.type == "g-1"):
                     self.bouclierActif = False
+                elif (e.type == "r-1"):
+                    self.ennemisLents = False
 
 
     #enregistrement des donnees
