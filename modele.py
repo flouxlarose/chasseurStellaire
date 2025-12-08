@@ -303,7 +303,8 @@ class Modele:
                     if (o.vie <= 0 and o in self.vague.liste_ovnis):
                         self.score += 1
                         self.vague.liste_ovnis.remove(o)
-                    self.vaisseau.projectiles.remove(p)
+                    if (not self.projectilesInvincibles):
+                        self.vaisseau.projectiles.remove(p)
         
         # Déplacement astéroides
         for a in self.asteroides:
@@ -315,7 +316,8 @@ class Modele:
                 if (self.collisionAvec(a, p)):
                     self.score += 1
                     self.asteroides.remove(a)
-                    self.vaisseau.projectiles.remove(p)
+                    if (not self.projectilesInvincibles):
+                        self.vaisseau.projectiles.remove(p)
 
         # Déplacement power ups
         for p in self.powerUps:
