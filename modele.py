@@ -93,8 +93,10 @@ class OVNI:
         self.mines.append(nouvelle_mine)
 
     def mise_a_jour(self, ennemisLents):
-        self.y += self.vy if not ennemisLents else self.vy / 2
-
+        if ennemisLents:
+            self.y += 1
+        else:
+            self.y += self.vy 
         for m in self.mines:
             m.mise_a_jour()
 
@@ -112,7 +114,8 @@ class Vague:
         self.nombre_ovni = 10
         self.liste_ovnis = []
         self.nombre_boss = 0
-        self.level_up()
+        for i in range(self.parent.niveau):
+            self.level_up()
 
     def creer_ovni(self):
         for i in range(self.nombre_ovni):
@@ -186,8 +189,9 @@ class Modele:
         self.tirContinu = False
         self.bouclierActif = False
         self.ennemisLents = False
-
+        
         self.vague = Vague(self)
+
 
     def deplacer_vaisseau(self,x):
         self.vaisseau.deplacer(x)
@@ -288,7 +292,6 @@ class Modele:
 
         # Déplacement des ennemis
         for o in self.vague.liste_ovnis:
-            o.mise_a_jour(self.ennemisLents)
             # si l'ovni est en bas de l'écran se remet en haut a une pos differente en x
             if (o.y > self.hauteur):
                 o.y = 0
@@ -327,6 +330,7 @@ class Modele:
                     if (random.randint(1,5) % 2):
                         self.vague.kill_all()
                     else:
+                        self.ennemisLents = True
                         self.effetsEnCours.append(Effets("r-1"))
                         print("r-lent")
                 elif (p.type == "purple"):
