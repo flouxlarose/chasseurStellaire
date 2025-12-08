@@ -337,6 +337,8 @@ class Modele:
                 elif (e.type == "g-1"):
                     self.bouclierActif = False
 
+    def alive(self): 
+        return self.vaisseau.vie > 0
 
     #enregistrement des donnees
     def sauvegarder(self,nom):
