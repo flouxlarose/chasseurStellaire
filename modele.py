@@ -139,8 +139,8 @@ class Vague:
                 self.premier_tick = True
                 
             self.nombre_ovni = 10 + (5 * self.parent.niveau)
-            self.vitesse_ovni[0] = self.vitesse_ovni[0] + (0.2 * self.parent.niveau)
-            self.vitesse_ovni[1] = self.vitesse_ovni[1] + (0.2 * self.parent.niveau)
+            self.vitesse_ovni[0] = self.vitesse_ovni[0] + (0.5 * self.parent.niveau)
+            self.vitesse_ovni[1] = self.vitesse_ovni[1] + (0.5 * self.parent.niveau)
             self.creer_ovni()
             if (self.parent.niveau % 3 == 0):
                 self.nombre_boss = int(self.parent.niveau / 3)
@@ -191,7 +191,7 @@ class Modele:
         
     def creer_vague(self):
         self.vague = Vague(self)
-        
+
     def deplacer_vaisseau(self,x):
         self.vaisseau.deplacer(x)
 
