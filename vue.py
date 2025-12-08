@@ -20,12 +20,12 @@ class Vue:
         self.frame_principale.pack()
 
     def creer_ecran_titre(self):
-        self.frame_titre = tk.Frame(self.frame_principale, width=1000, height=400, bg="black")
+        self.frame_titre = tk.Frame(self.frame_principale, width=400, height=400, bg="black")
         self.frame_titre.pack()
         self.frame_titre.propagate(False)
 
         self.label_titre = tk.Label(self.frame_titre, text="CHASSEUR STELLAIRE", bg="black", fg="red", font=("Times New Roman", 20))
-        self.label_titre.pack()
+        self.label_titre.pack(pady=50)
 
         self.radio_value = tk.IntVar()
         self.radio_value.set(3)
