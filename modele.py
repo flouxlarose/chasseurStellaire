@@ -109,8 +109,10 @@ class OVNI:
         self.mines.append(nouvelle_mine)
 
     def mise_a_jour(self, ennemisLents):
-        self.y += self.vy if not ennemisLents else self.vy / 2
-
+        if ennemisLents:
+            self.y += 1
+        else:
+            self.y += self.vy 
         for m in self.mines:
             m.mise_a_jour()
 
@@ -153,8 +155,8 @@ class Vague:
                 self.premier_tick = True
                 
             self.nombre_ovni = 10 + (5 * self.parent.niveau)
-            self.vitesse_ovni[0] = self.vitesse_ovni[0] + (0.2 * self.parent.niveau)
-            self.vitesse_ovni[1] = self.vitesse_ovni[1] + (0.2 * self.parent.niveau)
+            self.vitesse_ovni[0] = self.vitesse_ovni[0] + (0.5 * self.parent.niveau)
+            self.vitesse_ovni[1] = self.vitesse_ovni[1] + (0.5 * self.parent.niveau)
             self.creer_ovni()
             if (self.parent.niveau % 3 == 0):
                 self.nombre_boss = int(self.parent.niveau / 3)
@@ -202,7 +204,8 @@ class Modele:
         self.tirContinu = False
         self.bouclierActif = False
         self.ennemisLents = False
-
+        
+    def creer_vague(self):
         self.vague = Vague(self)
 
     def deplacer_vaisseau(self,x):
@@ -305,7 +308,6 @@ class Modele:
 
         # Déplacement des ennemis
         for o in self.vague.liste_ovnis:
-            o.mise_a_jour(self.ennemisLents)
             # si l'ovni est en bas de l'écran se remet en haut a une pos differente en x
             if (o.y > self.hauteur):
                 o.y = 0
@@ -345,6 +347,7 @@ class Modele:
                     if (random.randint(1,5) % 2):
                         self.vague.kill_all()
                     else:
+                        self.ennemisLents = True
                         self.effetsEnCours.append(Effets("r-1"))
                         print("r-lent")
                 elif (p.type == "purple"):
@@ -408,6 +411,8 @@ class Modele:
                 elif (e.type == "r-1"):
                     self.ennemisLents = False
 
+    def alive(self): 
+        return self.vaisseau.vie > 0
 
     #enregistrement des donnees
     def sauvegarder(self,nom):

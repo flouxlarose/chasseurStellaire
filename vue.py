@@ -44,6 +44,7 @@ class Vue:
         # Bindings (la Vue gère le canevas)
         self.canevas.bind("<Motion>", self.deplacer_vaisseau)
         self.canevas.bind("<Button-1>", self.tirer)
+        self.root.bind("<p>", self.is_paused)
 
     def creer_frame_infos(self):
         self.frame_infos = tk.Frame(self.frame_principale, bg="#222")
@@ -65,6 +66,7 @@ class Vue:
         #compteur de score (nombre d'ennemis tués)
         self.label_score = tk.Label(self.frame_infos, text="Score : 0", fg="white", bg="#222", font=("Arial", 12))
         self.label_score.pack(pady=10)
+
         #céer le bouton de sauvegarde
         self.btn_sauvegarder = tk.Button(self.frame_infos, text="Sauvegarder", command=self.sauvegarder)
         self.btn_sauvegarder.pack(pady=10)
@@ -238,6 +240,8 @@ class Vue:
             fill="red",
             font=("Arial", 24, "bold")
         )
+        self.sauvegarder()
+        
         highScore = self.controleur.modele.highScore()
         self.canevas.create_text(
             300, 350,                       
@@ -245,6 +249,22 @@ class Vue:
             fill="black",
             font=("Arial", 20, "bold")
         )
+
+    def is_paused(self, evt):
+        # self.canevas.create_rectangle(
+        #     150,150,
+        #     50,50,
+        #     fill="white"
+        # )
+
+        # self.canevas.create_rectangle(
+        #     170,170,
+        #     50,50,
+        #     fill="white"
+        # )
+        self.controleur.is_paused(evt)
+
+
 
     def deplacer_vaisseau(self,evt):
         # on pourrait vouloir le déplacer en y aussi
