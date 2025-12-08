@@ -19,12 +19,12 @@ class Projectile:
         self.y += self.vitesse
 
 class Mine:
-    def __init__(self, x, y):
+    def __init__(self, x, y, taille_x, taille_y, vitesse):
         self.x = x
         self.y = y
-        self.vitesse = 4   # vers le bas
-        self.taille_x = 5     # est un carré donc meme taille pour les deux côté
-        self.taille_y = 5
+        self.vitesse = vitesse   # vers le bas
+        self.taille_x = taille_x     # est un carré donc meme taille pour les deux côté
+        self.taille_y = taille_y
 
     def mise_a_jour(self):
         self.y += self.vitesse
@@ -33,7 +33,7 @@ class PowerUps:
     def __init__(self, x, y, vitesse, type):
         self.x = x
         self.y = y
-        self.vitesse = 4
+        self.vitesse = vitesse
         self.taille_x = 10
         self.taille_y = 15
         self.type = type
@@ -74,20 +74,26 @@ class Vaisseau:
 
 
 class OVNI:
-    def __init__(self, x, y, vy):
+    def __init__(self, x, y, vy, taille_x, taille_y, type):
+        self.type = type
         self.x = x
         self.y = y
         self.vy = vy
-        self.taille_x = 12
-        self.taille_y = 6
+        self.taille_x = taille_x
+        self.taille_y = taille_y
         self.mines = []
+        self.vie = 3 if (self.type == "boss") else 1
 
     def tirer(self):
-        nouvelle_mine = Mine(self.x, self.y + 10)
+        if(self.type == "normal"):
+            taille = 5
+        elif (self.type == "boss"):
+            taille = 10
+        nouvelle_mine = Mine(self.x, self.y + 10, taille, taille, self.vy + 1.5)
         self.mines.append(nouvelle_mine)
 
-    def mise_a_jour(self):
-        self.y += self.vy
+    def mise_a_jour(self, ennemisLents):
+        self.y += self.vy if not ennemisLents else self.vy / 2
 
         for m in self.mines:
             m.mise_a_jour()
@@ -100,28 +106,43 @@ class OVNI:
 
 class Vague:
     def __init__(self, parent):
+        self.premier_tick = False
         self.vitesse_ovni = [1, 2]
         self.parent = parent
         self.nombre_ovni = 10
         self.liste_ovnis = []
-        self.creer_ovni()
+        self.nombre_boss = 0
+        self.level_up()
 
     def creer_ovni(self):
         for i in range(self.nombre_ovni):
-            newOvni = OVNI(random.randint(0, 600), 0, self.vitesse_ovni[random.randint(0, 1)])
+            newOvni = OVNI(random.randint(0, 600), 0, self.vitesse_ovni[random.randint(0, 1)], 12, 6, "normal")
+            self.liste_ovnis.append(newOvni)
+    
+    def creer_ovni_boss(self):
+        for i in range(self.nombre_boss):
+            newOvni = OVNI(random.randint(0, 600), 0, self.vitesse_ovni[random.randint(0, 1)], 20, 14, "boss")
             self.liste_ovnis.append(newOvni)
 
     def mise_a_jour(self):
         for i in self.liste_ovnis:
-            i.mise_a_jour()
+            i.mise_a_jour(self.parent.ennemisLents)
     
     def level_up(self):
         if (not self.liste_ovnis):
-            self.parent.niveau += 1
-            self.nombre_ovni += 5
-            self.vitesse_ovni[0] += 0.2
-            self.vitesse_ovni[1] += 0.2
+            
+            if(self.premier_tick):
+                self.parent.niveau += 1
+            else:
+                self.premier_tick = True
+                
+            self.nombre_ovni = 10 + (5 * self.parent.niveau)
+            self.vitesse_ovni[0] = self.vitesse_ovni[0] + (0.2 * self.parent.niveau)
+            self.vitesse_ovni[1] = self.vitesse_ovni[1] + (0.2 * self.parent.niveau)
             self.creer_ovni()
+            if (self.parent.niveau % 3 == 0):
+                self.nombre_boss = int(self.parent.niveau / 3)
+                self.creer_ovni_boss()
     
     def kill_all(self):
         for o in self.liste_ovnis:
@@ -161,7 +182,10 @@ class Modele:
 
         self.projectilesLarges = False
         self.projectilesMultiples = False
+        self.projectilesInvincibles = False
+        self.tirContinu = False
         self.bouclierActif = False
+        self.ennemisLents = False
 
         self.vague = Vague(self)
 
@@ -264,20 +288,23 @@ class Modele:
 
         # Déplacement des ennemis
         for o in self.vague.liste_ovnis:
-            o.mise_a_jour()
+            o.mise_a_jour(self.ennemisLents)
             # si l'ovni est en bas de l'écran se remet en haut a une pos differente en x
             if (o.y > self.hauteur):
                 o.y = 0
                 o.x = random.randint(5, self.largeur - 5)
             if(self.collisionAvec(self.vaisseau, o) and not self.bouclierActif):
-                self.vaisseau.vie -= 1 
-                self.vague.liste_ovnis.remove(o)
+                self.vaisseau.vie -= 1
+                if (o in self.vague.liste_ovnis): 
+                    self.vague.liste_ovnis.remove(o)
             for p in self.vaisseau.projectiles:
                 if (self.collisionAvec(o, p)):
-                    print("ovni détruit")
-                    self.score += 1
-                    self.vague.liste_ovnis.remove(o)
-                    self.vaisseau.projectiles.remove(p)
+                    o.vie -= 1
+                    if (o.vie <= 0 and o in self.vague.liste_ovnis):
+                        self.score += 1
+                        self.vague.liste_ovnis.remove(o)
+                    if (not self.projectilesInvincibles):
+                        self.vaisseau.projectiles.remove(p)
         
         # Déplacement astéroides
         for a in self.asteroides:
@@ -287,37 +314,54 @@ class Modele:
                 self.asteroides.remove(a)
             for p in self.vaisseau.projectiles:
                 if (self.collisionAvec(a, p)):
-                    print("astéroide détruit")
                     self.score += 1
                     self.asteroides.remove(a)
-                    self.vaisseau.projectiles.remove(p)
+                    if (not self.projectilesInvincibles):
+                        self.vaisseau.projectiles.remove(p)
 
         # Déplacement power ups
         for p in self.powerUps:
             p.mise_a_jour()
             if (self.collisionAvec(self.vaisseau, p)):
                 if (p.type == "red"):
-                    self.vague.kill_all()
+                    if (random.randint(1,5) % 2):
+                        self.vague.kill_all()
+                    else:
+                        self.effetsEnCours.append(Effets("r-1"))
+                        print("r-lent")
                 elif (p.type == "purple"):
-                    if (random.randint(1,2) % 2):
+                    rng = random.randint(1,30)
+                    if (rng <= 7):
                         self.projectilesMultiples = True
                         self.effetsEnCours.append(Effets("p-1"))
-                    else: 
+                        print("p-mult")
+                    elif (rng <= 15): 
                         self.projectilesLarges = True
                         self.effetsEnCours.append(Effets("p-2"))
+                        print("p-larg")
+                    elif (rng <= 25):
+                        self.projectilesInvincibles = True
+                        self.effetsEnCours.append(Effets("p-3"))
+                        print("p-inv")
+                    elif (rng <= 30):
+                        self.tirContinu = True
+                        self.effetsEnCours.append(Effets("p-4"))
+                        print("p-continu")
                 else: 
                     if (random.randint(1,2) % 2):
                         if (self.vaisseau.vie < 3):
                             self.vaisseau.vie += 1
+                            print("g-vie")
                     else: 
                         self.bouclierActif = True
                         self.effetsEnCours.append(Effets("g-1"))
+                        print("g-bouclier")
 
                 self.powerUps.remove(p)
 
         # Nettoyage des objets sortis de l'écran
         self.ovnis = [
-            o for o in self.ovnis
+            o for o in self.ovnis 
             if o.y < self.hauteur
         ]
 
@@ -326,6 +370,9 @@ class Modele:
             if a.y < self.hauteur
         ]
         
+        if (self.tirContinu):
+            self.vaisseau.tirer(self.projectilesMultiples, self.projectilesLarges)
+
         # Compte le temps restant pour chaque effet en cours
         for e in self.effetsEnCours:
             if (time.time() - e.time > 10):
@@ -334,8 +381,14 @@ class Modele:
                     self.projectilesMultiples = False
                 elif (e.type == "p-2"):
                     self.projectilesLarges = False
+                elif (e.type == "p-3"):
+                    self.projectilesInvincibles = False
+                elif (e.type == "p-4"):
+                    self.tirContinu = False
                 elif (e.type == "g-1"):
                     self.bouclierActif = False
+                elif (e.type == "r-1"):
+                    self.ennemisLents = False
 
     def alive(self): 
         return self.vaisseau.vie > 0

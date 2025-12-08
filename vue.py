@@ -20,12 +20,12 @@ class Vue:
         self.frame_principale.pack()
 
     def creer_ecran_titre(self):
-        self.frame_titre = tk.Frame(self.frame_principale, width=1000, height=400, bg="black")
+        self.frame_titre = tk.Frame(self.frame_principale, width=400, height=400, bg="black")
         self.frame_titre.pack()
         self.frame_titre.propagate(False)
 
         self.label_titre = tk.Label(self.frame_titre, text="CHASSEUR STELLAIRE", bg="black", fg="red", font=("Times New Roman", 20))
-        self.label_titre.pack()
+        self.label_titre.pack(pady=50)
 
         self.radio_value = tk.IntVar()
         self.radio_value.set(3)
@@ -142,32 +142,51 @@ class Vue:
 
         # --- Vague ---
         for o in self.controleur.modele.vague.liste_ovnis:
-            self.canevas.create_rectangle(
-                o.x - o.taille_x,
-                o.y - o.taille_y,
-                o.x + o.taille_x,
-                o.y + o.taille_y,
-                fill="yellow"
-            )
-            self.canevas.create_line(
-                o.x,
-                o.y + o.taille_y,
-                o.x,
-                o.y + o.taille_y + 6,
-                fill="red",
-                width=2
-            )
+            if (o.type == "normal"):
+                self.canevas.create_rectangle(
+                    o.x - o.taille_x,
+                    o.y - o.taille_y,
+                    o.x + o.taille_x,
+                    o.y + o.taille_y,
+                    fill="yellow",
+                    outline="red"
+                )
+                self.canevas.create_line(
+                    o.x,
+                    o.y + o.taille_y,
+                    o.x,
+                    o.y + o.taille_y + 6,
+                    fill="red",
+                    width=2
+                )
+            elif (o.type == "boss"):
+                self.canevas.create_rectangle(
+                    o.x - o.taille_x,
+                    o.y - o.taille_y,
+                    o.x + o.taille_x,
+                    o.y + o.taille_y,
+                    fill="red",
+                    outline="yellow"
+                )
+                self.canevas.create_line(
+                    o.x,
+                    o.y + o.taille_y,
+                    o.x,
+                    o.y + o.taille_y + 6,
+                    fill="blue",
+                    width=8
+                )
 
         # --- Mines ---
         for o in self.controleur.modele.vague.liste_ovnis:
             for m in o.mines:
                 self.canevas.create_rectangle(
-                    m.x + m.taille_x,
-                    m.y + m.taille_x,
                     m.x - m.taille_x,
-                    m.y,
+                    m.y - m.taille_x,
+                    m.x + m.taille_x,
+                    m.y + m.taille_y,
                     fill="red"
-                )    
+                )
 
         # --- Astéroïdes ---
         for a in self.controleur.modele.asteroides:
