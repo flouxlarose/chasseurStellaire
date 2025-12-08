@@ -114,8 +114,7 @@ class Vague:
         self.nombre_ovni = 10
         self.liste_ovnis = []
         self.nombre_boss = 0
-        for i in range(self.parent.niveau):
-            self.level_up()
+        self.level_up()
 
     def creer_ovni(self):
         for i in range(self.nombre_ovni):
@@ -190,9 +189,9 @@ class Modele:
         self.bouclierActif = False
         self.ennemisLents = False
         
+    def creer_vague(self):
         self.vague = Vague(self)
-
-
+        
     def deplacer_vaisseau(self,x):
         self.vaisseau.deplacer(x)
 

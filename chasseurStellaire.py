@@ -22,6 +22,7 @@ class Controleur:
         self.vue.frame_titre.destroy()
         self.vue.creer_frame_canevas()
         self.vue.creer_frame_infos()
+        self.modele.creer_vague()
         self.boucle_jeu()
 
     def deplacer_vaisseau(self, x):
