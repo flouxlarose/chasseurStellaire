@@ -155,8 +155,8 @@ class Vague:
                 self.premier_tick = True
                 
             self.nombre_ovni = 10 + (5 * self.parent.niveau)
-            self.vitesse_ovni[0] = self.vitesse_ovni[0] + (0.5 * self.parent.niveau)
-            self.vitesse_ovni[1] = self.vitesse_ovni[1] + (0.5 * self.parent.niveau)
+            self.vitesse_ovni[0] = self.vitesse_ovni[0] + (0.3 * self.parent.niveau)
+            self.vitesse_ovni[1] = self.vitesse_ovni[1] + (0.3 * self.parent.niveau)
             self.creer_ovni()
             if (self.parent.niveau % 3 == 0):
                 self.nombre_boss = int(self.parent.niveau / 3)
@@ -169,11 +169,12 @@ class Vague:
 
 class Asteroide:
     def __init__(self, x, y, vy):
+        rng = random.randint(10,20)
         self.x = x
         self.y = y
-        self.vy = vy
-        self.taille_x = 10
-        self.taille_y = 10
+        self.vy = vy * (rng / 10)
+        self.taille_x = rng
+        self.taille_y = rng
 
     def mise_a_jour(self):
         self.y += self.vy
