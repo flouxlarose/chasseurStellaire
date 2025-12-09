@@ -1,6 +1,7 @@
 import tkinter as tk
 from random import randint
 import math
+from PIL import Image, ImageTk
 
 class Vue:
     def __init__(self, controleur, hauteur, largeur):
@@ -9,7 +10,7 @@ class Vue:
         self.largeur = largeur
         self.root = tk.Tk()
         self.root.title("Vertical Shooter - MVC")
- 
+        self.defilementSkyY = 0
         self.creer_fenetre_principale()
         self.creer_ecran_titre()
 
@@ -40,6 +41,10 @@ class Vue:
     def creer_frame_canevas(self):
         self.canevas = tk.Canvas(self.frame_principale, width=self.hauteur, height=self.largeur, bg="black")
         self.canevas.grid(row=0, column=0)
+
+        self.sky_pil = Image.open("./sky.png")
+        self.sky_image = ImageTk.PhotoImage(self.sky_pil)
+
 
         # Bindings (la Vue gère le canevas)
         self.canevas.bind("<Motion>", self.deplacer_vaisseau)
@@ -74,6 +79,8 @@ class Vue:
     # ---------- Affichage du jeu ----------
     def afficher_jeu(self):
         self.canevas.delete("all")
+        # self.defilementSkyY += 1
+        self.canevas.create_image(0,self.defilementSkyY, image=self.sky_image, anchor=tk.NW)
 
         # --- Vaisseau du joueur ---
         v = self.controleur.modele.vaisseau

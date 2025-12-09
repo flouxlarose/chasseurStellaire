@@ -304,7 +304,8 @@ class Modele:
                 o.tirer()
             for m in o.mines:
                 if (self.collisionAvec(self.vaisseau, m) and not self.bouclierActif):
-                    self.vaisseau.vie -= 1
+                    if (self.vaisseau.vie > 0):
+                        self.vaisseau.vie -= 1
                     self.vaisseau.animation_couleur()
                     o.mines.remove(m)
 
@@ -315,7 +316,8 @@ class Modele:
                 o.y = 0
                 o.x = random.randint(5, self.largeur - 5)
             if(self.collisionAvec(self.vaisseau, o) and not self.bouclierActif):
-                self.vaisseau.vie -= 1
+                if (self.vaisseau.vie > 0):
+                    self.vaisseau.vie -= 1
                 self.vaisseau.animation_couleur()
                 if (o in self.vague.liste_ovnis): 
                     self.vague.liste_ovnis.remove(o)
@@ -332,12 +334,14 @@ class Modele:
         for a in self.asteroides:
             a.mise_a_jour()
             if(self.collisionAvec(self.vaisseau, a) and not self.bouclierActif):
-                self.vaisseau.vie -= 1
+                if (self.vaisseau.vie > 0):
+                    self.vaisseau.vie -= 1
                 self.asteroides.remove(a)
             for p in self.vaisseau.projectiles:
                 if (self.collisionAvec(a, p)):
                     self.score += 1
-                    self.asteroides.remove(a)
+                    if (a in self.asteroides):
+                        self.asteroides.remove(a)
                     if (not self.projectilesInvincibles):
                         self.vaisseau.projectiles.remove(p)
 
