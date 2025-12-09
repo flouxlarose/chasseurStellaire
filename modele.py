@@ -55,8 +55,9 @@ class Vaisseau:
         self.couleur_dif = False
         self.cpt_couleur = 0
 
-    def deplacer(self, x):
+    def deplacer(self, x, y):
         self.x = x
+        self.y = y
     
     def tirer(self, multiple, large):
         if (multiple):
@@ -209,8 +210,8 @@ class Modele:
     def creer_vague(self):
         self.vague = Vague(self)
 
-    def deplacer_vaisseau(self,x):
-        self.vaisseau.deplacer(x)
+    def deplacer_vaisseau(self,x, y):
+        self.vaisseau.deplacer(x, y)
 
     def tirer(self):
         self.vaisseau.tirer(self.projectilesMultiples, self.projectilesLarges)

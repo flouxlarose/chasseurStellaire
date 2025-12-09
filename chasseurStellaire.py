@@ -32,8 +32,8 @@ class Controleur:
         self.modele.creer_vague()
         self.boucle_jeu()
 
-    def deplacer_vaisseau(self, x):
-        self.modele.deplacer_vaisseau(x)
+    def deplacer_vaisseau(self, x, y):
+        self.modele.deplacer_vaisseau(x, y)
 
     def tirer(self):
         self.modele.tirer()

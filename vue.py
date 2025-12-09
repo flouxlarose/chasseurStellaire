@@ -268,7 +268,7 @@ class Vue:
 
     def deplacer_vaisseau(self,evt):
         # on pourrait vouloir le déplacer en y aussi
-        self.controleur.deplacer_vaisseau(evt.x)
+        self.controleur.deplacer_vaisseau(evt.x, evt.y)
 
     def tirer(self,evt):
         self.controleur.tirer()
