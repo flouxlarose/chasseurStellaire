@@ -4,8 +4,6 @@ from vue import Vue
 class Controleur:
     def __init__(self):
         self.vue = Vue(self, 600, 700)
-        self.modele = Modele(self, 600, 700)
-        self.modele.highScore()
         self.Paused = True
         # self.alive = self.modele.alive
         self.vue.root.mainloop()
@@ -28,6 +26,7 @@ class Controleur:
     # Méthodes appelées par la Vue (via bindings)
     def commencer_jeu(self):
         self.modele = Modele(self,600,700)
+        self.modele.highScore()
         self.modele.niveau = self.vue.radio_value.get()
         self.vue.frame_titre.destroy()
         self.vue.creer_frame_canevas()
