@@ -77,7 +77,10 @@ class Vue:
         self.label_niveau.pack(pady=10)
 
         self.btn_rejouer = tk.Button(self.frame_infos, text="Rejouer", command=self.rejouer)
-        self.btn_rejouer.pack(pady=50)
+        self.btn_rejouer.pack(pady=10)
+
+        self.btn_niveau = tk.Button(self.frame_infos, text="Niveaux", command=self.niveau)
+        self.btn_niveau.pack(pady=10)
 
         #creer le label pour les informations 
         self.label_nom = tk.Entry(self.frame_infos, width=25, font=("Arial", 10))
@@ -302,6 +305,12 @@ class Vue:
 
     def tirer(self,evt):
         self.controleur.tirer()
+
+    def niveau(self):
+        self.canevas.destroy()
+        self.frame_infos.destroy()
+        self.creer_ecran_titre()    
+        self.root.after_cancel(self.controleur.id_loop)
 
     def rejouer(self):
         self.controleur.rejouer(self.controleur.modele.vaisseau.vie == 0)
