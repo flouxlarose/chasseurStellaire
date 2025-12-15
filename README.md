@@ -14,9 +14,9 @@
 3. Cliquer sur le bouton gauche de la souris pour que le vaisseau tire...
 4. Les power-up sont des étoiles de couleurs qui apparaissent aléatoirement
 5. Effets des power-ups, ceux-ci peuvent être en même temps et durent 10 secondes
-    - mauve: Effets sur les projectiles (Aléatoire)
+    - mauve: Effets sur les projectiles (Aléatoire et pour un temps limité)
         - des tirs plus gros
-        - des tirs triple pendant un temps limité
+        - des tirs triple
         - des tirs capables de traverser les ennemis (invincible)
         - un tir en continu
     - rouge: Effets sur les OVNIS
@@ -28,4 +28,4 @@
 6. À la fin de chaque vague, la vitesse des ennemis augmente. Il faut éliminer tous les ennemis de la vague pour passer à la suivante.
 7. Vous pouvez enregistrer votre score à l'aide du bouton en ayant (ou non) rentrer votre nom. Si oui le nom sera associé au score
 8. Vous pouvez a tout moment appuyer sur le bouton rejouer pour redémarrer la partie mais la difficulté ne sera pas changé et vous allez commencer à la vague associé a la difficulté choisi
-9. Appuyer sur le bouton "Niveaux" permet de retourner à l'écran titre
+9. Pour faire 
