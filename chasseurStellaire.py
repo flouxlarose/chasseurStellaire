@@ -4,7 +4,6 @@ from vue import Vue
 class Controleur:
     def __init__(self):
         self.vue = Vue(self, 600, 700)
-        self.modele = Modele(self,600,700)
         self.Paused = True
         # self.alive = self.modele.alive
         self.vue.root.mainloop()
@@ -14,17 +13,18 @@ class Controleur:
             if (self.modele.vaisseau.vie > 0): ## funct return
                 self.modele.mise_a_jour()
                 self.vue.afficher_jeu()
-                self.vue.root.after(30, self.boucle_jeu)
+                self.id_loop = self.vue.root.after(30, self.boucle_jeu)
             else:
                 self.vue.afficher_game_over()
         else: 
             #vérification de l'état de vie à faire dans le modèle 
-            self.vue.root.after(30, self.boucle_jeu)
+            self.id_loop = self.vue.root.after(30, self.boucle_jeu)
             
         
 
     # Méthodes appelées par la Vue (via bindings)
     def commencer_jeu(self):
+        self.modele = Modele(self,600,700)
         self.modele.niveau = self.vue.radio_value.get()
         self.vue.frame_titre.destroy()
         self.vue.creer_frame_canevas()
