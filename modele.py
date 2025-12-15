@@ -468,5 +468,8 @@ class Modele:
                 if len(row) > 1:
                     self.topscore.ajouter_score( [int(row[1])], [str(row[0])])
 
-        high = max(self.topscore.scores)
+        if(self.topscore.scores):
+            high = max(self.topscore.scores)
+        else:
+            high = 0
         return high 
