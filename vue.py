@@ -51,6 +51,21 @@ class Vue:
         self.canevas.bind("<Button-1>", self.tirer)
         self.root.bind("<p>", self.is_paused)
 
+    def mettre_a_jour_top_scores(self):
+        texte = ""
+        scores, names = self.controleur.infos_scores()
+        
+        ##liste de scores
+
+        for i, (name, score ) in enumerate(zip(names, scores), start = 0):
+            texte += f"{i + 1}, {name}, {score}\n"
+       
+        ##si moins de 10 elements dans le score
+        for i in range(len(scores), 10):
+            texte += f"{i + 1}.\n"
+ 
+        self.top_label.config(text=texte)
+
     def creer_frame_infos(self):
         self.frame_infos = tk.Frame(self.frame_principale, bg="#222")
         self.frame_infos.grid(row=0, column=1, sticky="n")
@@ -75,6 +90,14 @@ class Vue:
         #céer le bouton de sauvegarde
         self.btn_sauvegarder = tk.Button(self.frame_infos, text="Sauvegarder", command=self.sauvegarder)
         self.btn_sauvegarder.pack(pady=10)
+
+        self.top_title = tk.Label(self.frame_infos, text="TOP SCORES", bg="white", fg="black", font=("Arial", 16, "bold"))
+        self.top_title.pack(side="top", pady=(10, 0))  
+        self.top_box = tk.Frame(self.frame_infos, width=150, height=250, bg="white")
+        self.top_box.pack(side="bottom")
+        self.top_box.pack_propagate(False)
+        self.top_label = tk.Label(self.top_box, text=" ", bg="white", fg="black", justify="left", font=("Arial", 14))
+        self.top_label.pack(expand=True, anchor="nw")
 
     # ---------- Affichage du jeu ----------
     def afficher_jeu(self):

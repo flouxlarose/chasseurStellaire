@@ -3,6 +3,38 @@ import csv
 import time
 
 # ------------------ CLASSES ------------------
+class TopScore():
+    def __init__(self):
+        self.max_scores = 10
+       
+        self.names = []
+        self.scores = []
+
+    def ajouter_score(self, score, name):
+        self.scores.append(score)
+        self.names.append(name)
+
+        # Fusionner noms + scores
+        liste = list(zip(self.scores, self.names))
+
+        # Trier par score décroissant
+        liste.sort(reverse=True, key=lambda x: x[0])
+
+        # Re-séparer
+        self.scores, self.names = zip(*liste)
+
+        # Convertir de nouveau en listes
+        self.scores = list(self.scores)
+        self.names = list(self.names)
+
+        # Limiter à max_scores
+        self.scores = self.scores[:self.max_scores]
+        self.names  = self.names[:self.max_scores]
+             
+
+    def rerturn_info(self):
+        return self.scores, self.names
+
 
 class Projectile:
     def __init__(self, x, y, estLarge):
@@ -199,6 +231,8 @@ class Modele:
         self.score = 0
         self.niveau = self.parent.vue.radio_value.get()
         self.effetsEnCours = []
+
+        self.topscore = TopScore()
 
         self.projectilesLarges = False
         self.projectilesMultiples = False
@@ -432,7 +466,7 @@ class Modele:
             contenu = csv.reader(file, delimiter=',')
             for row in contenu:
                 if len(row) > 1:
-                    score_col.append(int(row[1]))
+                    self.topscore.ajouter_score( [int(row[1])], [str(row[0])])
 
-        high = max(score_col)
+        high = max(self.topscore.scores)
         return high 
